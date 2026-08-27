@@ -11,11 +11,11 @@
 
 <style>
   :root{
-    --bg: #fbf1de;
-    --bg-deep: #f2e0b4;
-    --panel: #fffaf0;
-    --panel-2: #fdf1da;
-    --line: #e3cf9c;
+    --bg: #ea5539;
+    --bg-deep: #fbe3d8;
+    --panel: #ffffff;
+    --panel-2: #fff6ee;
+    --line: #f0c9b8;
     --red: #7c2530;
     --red-bright: #a5362f;
     --gold: #c9581c;
@@ -45,8 +45,8 @@
     content:"";
     position:absolute; inset:0;
     background:
-      radial-gradient(ellipse 500px 260px at 50% -60px, rgba(232,114,31,0.12), transparent 70%),
-      radial-gradient(ellipse 400px 300px at 90% 10%, rgba(124,37,48,0.07), transparent 70%);
+      radial-gradient(ellipse 500px 260px at 50% -60px, rgba(255,255,255,0.10), transparent 70%),
+      radial-gradient(ellipse 400px 300px at 90% 10%, rgba(0,0,0,0.08), transparent 70%);
     pointer-events:none;
   }
   .hn-shell{ max-width: 480px; margin: 0 auto; padding: 26px 20px 0; position:relative; }
@@ -55,7 +55,12 @@
   /* header */
   .hn-header{ text-align:center; margin-bottom: 18px; }
   .hn-mark{ display:flex; justify-content:center; margin-bottom: 6px; }
-  .hn-mark svg{ width:52px; height:52px; filter: drop-shadow(0 3px 8px rgba(124,37,48,0.18)); }
+  .hn-mark-badge{
+    width:64px; height:64px; border-radius:50%; background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  }
+  .hn-mark svg{ width:48px; height:48px; }
   .hn-word{
     font-family: var(--font-display);
     font-weight: 900;
@@ -65,23 +70,24 @@
     margin: 0;
   }
   .hn-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--gold-soft); vertical-align: top; margin-left: 3px; }
-  .hn-tagline{ font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-top: 2px; }
+  .hn-tagline{ font-size: 11px; color: var(--paper); opacity: 0.7; letter-spacing: 0.15em; margin-top: 2px; }
   .hn-sub{
     font-size: 12px;
-    color: var(--gold);
+    color: var(--paper);
     letter-spacing: 0.2em;
     margin-top: 8px;
     font-weight: 700;
+    opacity: 0.82;
   }
   .hn-tabs{
     position:absolute; top: 14px; right: 12px;
     display:flex; gap: 6px; font-size: 11px;
   }
   .hn-tab-link{
-    color: var(--muted); text-decoration:none;
+    color: var(--paper); text-decoration:none;
     border: 1px solid var(--line); border-radius: 20px;
     padding: 5px 10px; letter-spacing: 0.05em;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.88);
   }
   .hn-tab-link.active{ color: #fff6ee; background: var(--gold-soft); border-color: var(--gold-soft); font-weight:700; }
 
@@ -273,7 +279,7 @@
   const FIREBASE_DB_URL = 'https://hounantei-waiting-default-rtdb.firebaseio.com';
   const STATE_PATH = '/marghetta/state';
   const TICKET_KEY = 'mg-my-ticket-id';
-  const APP_VERSION = 'V202608271200'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202608271500'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -454,7 +460,7 @@
       '</radialGradient></defs></svg>';
   }
   function logoHTML(){
-    return '<div class="hn-mark">'+markSVG()+'</div>'+
+    return '<div class="hn-mark"><div class="hn-mark-badge">'+markSVG()+'</div></div>'+
       '<h1 class="hn-word">マルゲッタ<span class="hn-dot"></span></h1>'+
       '<div class="hn-tagline">めんたいこ生パスタの店</div>';
   }
