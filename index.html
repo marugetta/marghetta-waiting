@@ -244,8 +244,8 @@
   .hn-history-list{ margin-top: 8px; }
   .hn-history-row{
     display:flex; align-items:center; gap: 12px;
-    background: rgba(0,0,0,0.02); border: 1px solid var(--line); border-radius: 12px;
-    padding: 10px 14px; margin-bottom: 8px; opacity: 0.9;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 14px; margin-bottom: 8px;
   }
   .hn-history-row .hn-row-num{ font-size: 16px; }
   .hn-history-row .hn-row-name{ font-size: 14px; }
@@ -268,7 +268,7 @@
   const TICKET_KEY = 'mg-my-ticket-id';
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
-  const APP_VERSION = 'V202608271830'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202608271900'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -786,7 +786,7 @@
           active.map(rowHTML).join('')) +
       '</div>'+
       (pastGroups.length===0 ? '' :
-        '<div class="hn-label" style="margin:20px 2px 8px;">過去の履歴</div>'+
+        '<div class="hn-label" style="margin:20px 2px 8px; color:var(--paper); font-weight:700; opacity:0.85;">過去の履歴</div>'+
         '<div class="hn-history">'+
           pastGroups.map(function(g){
             const open = openHistoryDays.has(g.key);
