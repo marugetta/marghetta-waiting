@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>マルゲッタ 唐人町店 | 待受け受付</title>
+<title>マルゲッタ 唐人町店 | 順番待ち受付</title>
 <!-- マルゲッタ 待ちリストアプリ（宝雲亭版をベースに再構築） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -279,7 +279,7 @@
   const FIREBASE_DB_URL = 'https://hounantei-waiting-default-rtdb.firebaseio.com';
   const STATE_PATH = '/marghetta/state';
   const TICKET_KEY = 'mg-my-ticket-id';
-  const APP_VERSION = 'V202608271500'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202608271530'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -293,7 +293,7 @@
 
   const T = {
     ja: {
-      subCustomer: '唐人町店　待受け受付', subTicket: '受付票',
+      subCustomer: '唐人町店　順番待ち受付', subTicket: '受付票',
       tabCheckin: '受付', tabStatus: '只今の待ち状況',
       statusHeading: '待ち状況', statusCountLabel: '現在お待ちの組数', statusLongestLabel: '最長待ち時間',
       statusListLabel: '受付中の番号', statusEmpty: '現在、待っているお客様はいません', minUnit: '分',
