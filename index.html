@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>マルゲッタ 唐人町店 | 待受け受付</title>
+<!-- マルゲッタ 待ちリストアプリ（宝雲亭版をベースに再構築） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #fbf1de;
+    --bg-deep: #f2e0b4;
+    --panel: #fffaf0;
+    --panel-2: #fdf1da;
+    --line: #e3cf9c;
+    --red: #7c2530;
+    --red-bright: #a5362f;
+    --gold: #c9581c;
+    --gold-soft: #e8721f;
+    --paper: #2a1c12;
+    --muted: #8a7358;
+    --font-display: "Zen Kaku Gothic New", "Noto Sans JP", sans-serif;
+    --font-body: "Zen Kaku Gothic New", "Noto Sans JP", sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; height:100%; background: var(--bg); }
+  .hn-root{
+    background: var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0 40px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .hn-root::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 500px 260px at 50% -60px, rgba(232,114,31,0.12), transparent 70%),
+      radial-gradient(ellipse 400px 300px at 90% 10%, rgba(124,37,48,0.07), transparent 70%);
+    pointer-events:none;
+  }
+  .hn-shell{ max-width: 480px; margin: 0 auto; padding: 26px 20px 0; position:relative; }
+  .hn-shell.wide{ max-width: 720px; }
+
+  /* header */
+  .hn-header{ text-align:center; margin-bottom: 18px; }
+  .hn-mark{ display:flex; justify-content:center; margin-bottom: 6px; }
+  .hn-mark svg{ width:52px; height:52px; filter: drop-shadow(0 3px 8px rgba(124,37,48,0.18)); }
+  .hn-word{
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: 0.06em;
+    color: var(--paper);
+    margin: 0;
+  }
+  .hn-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--gold-soft); vertical-align: top; margin-left: 3px; }
+  .hn-tagline{ font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-top: 2px; }
+  .hn-sub{
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-top: 8px;
+    font-weight: 700;
+  }
+  .hn-tabs{
+    position:absolute; top: 14px; right: 12px;
+    display:flex; gap: 6px; font-size: 11px;
+  }
+  .hn-tab-link{
+    color: var(--muted); text-decoration:none;
+    border: 1px solid var(--line); border-radius: 20px;
+    padding: 5px 10px; letter-spacing: 0.05em;
+    background: rgba(255,255,255,0.5);
+  }
+  .hn-tab-link.active{ color: #fff6ee; background: var(--gold-soft); border-color: var(--gold-soft); font-weight:700; }
+
+  /* language selector */
+  .hn-langs{ display:flex; gap: 6px; justify-content:center; flex-wrap: wrap; margin-bottom: 18px; }
+  .hn-lang-btn{
+    font-size: 12px; padding: 6px 12px; border-radius: 20px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor:pointer;
+  }
+  .hn-lang-btn.active{ border-color: var(--gold-soft); color: var(--gold-soft); background: rgba(201,88,28,0.10); font-weight: 700; }
+
+  /* card */
+  .hn-card{
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px 20px 24px;
+    box-shadow: 0 18px 40px rgba(124,37,48,0.10);
+  }
+  .hn-notice{
+    display:flex; align-items:center; gap:10px; flex-wrap: wrap;
+    background: rgba(124,37,48,0.08);
+    border: 1px solid rgba(124,37,48,0.28);
+    color: var(--red);
+    padding: 10px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.03em;
+    margin-bottom: 18px;
+  }
+  .hn-notice .dot{ width:7px; height:7px; border-radius:50%; background:var(--red-bright); box-shadow:0 0 0 4px rgba(165,54,47,0.22); flex-shrink:0; }
+  .hn-notice-count{ font-weight: 900; color: var(--gold); }
+
+  .hn-field{ margin-bottom: 18px; }
+  .hn-label{ font-size: 12px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 8px; display:block; }
+  .hn-label b{ color: var(--gold); font-weight:700; margin-right: 2px; }
+
+  .hn-stepper{ display:flex; align-items:center; gap: 14px; }
+  .hn-stepbtn{
+    width: 42px; height: 42px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--bg-deep);
+    color: var(--paper); font-size: 20px; font-weight: 700;
+    cursor:pointer; user-select:none;
+  }
+  .hn-stepbtn:active{ background: var(--red); border-color: var(--red); color:#fff6ee; }
+  .hn-count{
+    font-family: var(--font-display); font-size: 30px; font-weight: 700;
+    min-width: 60px; text-align:center;
+  }
+  .hn-count small{ font-size: 13px; font-family: var(--font-body); color: var(--muted); margin-left: 4px; }
+
+  .hn-input{
+    width: 100%; padding: 13px 14px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--bg-deep);
+    color: var(--paper); font-family: var(--font-body); font-size: 15px;
+  }
+  .hn-input::placeholder{ color: #b3a180; }
+  .hn-input:focus, .hn-stepbtn:focus, .hn-seat input:focus + span, button:focus-visible{
+    outline: 2px solid var(--gold-soft); outline-offset: 2px;
+  }
+
+  .hn-seats{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .hn-seat{ position:relative; }
+  .hn-seat input{ position:absolute; opacity:0; inset:0; cursor:pointer; margin:0; }
+  .hn-seat span{
+    display:block; text-align:center; padding: 12px 8px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--bg-deep); font-size: 14px; color: var(--muted);
+  }
+  .hn-seat input:checked + span{
+    border-color: var(--gold-soft); color: var(--gold); background: rgba(201,88,28,0.10); font-weight: 700;
+  }
+
+  .hn-submit{
+    width:100%; margin-top: 6px; padding: 15px; border-radius: 12px; border: none;
+    background: linear-gradient(180deg, var(--red-bright), var(--red));
+    color: #fff6ee; font-family: var(--font-display); font-weight: 800; font-size: 16px;
+    letter-spacing: 0.1em; cursor: pointer; box-shadow: 0 10px 24px rgba(124,37,48,0.30);
+  }
+  .hn-submit:disabled{ opacity: 0.6; cursor: default; }
+  .hn-err{ color: var(--red-bright); font-size: 12px; margin-top: 8px; min-height: 16px; }
+
+  /* ticket display */
+  .hn-ticket{ text-align:center; padding: 26px 4px 8px; }
+  .hn-ticket-label{
+    font-size: 13px; color: var(--muted); letter-spacing:0.2em; font-weight: 700;
+  }
+  .hn-ticket-bignum{
+    font-family: var(--font-display); font-weight: 900; font-size: 76px; line-height: 1.1;
+    color: var(--gold); margin: 8px 0 4px; letter-spacing: 0.04em;
+    text-shadow: 0 6px 18px rgba(201,88,28,0.22);
+  }
+  .hn-ticket-name{ font-size: 18px; font-weight: 700; margin-top: 10px; }
+  .hn-ticket-meta{ color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .hn-ticket-status{
+    margin-top: 18px; padding: 10px; border-radius: 10px;
+    background: rgba(201,88,28,0.08); border: 1px solid rgba(201,88,28,0.30);
+    color: var(--gold); font-size: 13px; font-weight: 700;
+  }
+  .hn-ticket-status.called{ background: rgba(165,54,47,0.12); border-color: rgba(165,54,47,0.4); color: var(--red-bright); }
+  .hn-back{ margin-top: 16px; background:none; border:none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor:pointer; }
+
+  /* play-while-you-wait games */
+  .hn-games{ margin-top: 20px; text-align:left; }
+  .hn-games-label{ font-size: 12px; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 8px; text-align:center; }
+  .hn-games-list{ display:flex; gap: 10px; }
+  .hn-game-card{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding: 14px 8px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--bg-deep); text-decoration:none; color: var(--paper);
+    font-size: 12px; font-weight: 700; text-align:center;
+  }
+  .hn-game-card:active{ border-color: var(--gold-soft); background: rgba(232,114,31,0.10); }
+  .hn-game-emoji{ font-size: 24px; }
+
+  /* staff view */
+  .hn-summary{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px;
+  }
+  .hn-summary-item{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 6px; text-align: center;
+  }
+  .hn-summary-num{ font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold); }
+  .hn-summary-label{ font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.03em; }
+  .hn-staffbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; }
+  .hn-staffbar .hn-updated{ font-size: 11px; color: var(--muted); }
+  .hn-reset{
+    font-size: 11px; color: var(--muted); background:none; border: 1px solid var(--line);
+    border-radius: 20px; padding: 5px 10px; cursor:pointer;
+  }
+  .hn-empty{ text-align:center; color: var(--muted); padding: 40px 10px; font-size: 13px; }
+  .hn-row{
+    display:flex; align-items:center; gap: 12px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 10px;
+  }
+  .hn-row.called{ border-color: rgba(165,54,47,0.45); background: rgba(165,54,47,0.06); }
+  .hn-row-num{
+    font-family: var(--font-display); font-weight: 900; font-size: 20px; color: var(--gold);
+    width: 34px; text-align:center; flex-shrink:0;
+  }
+  .hn-row-main{ flex: 1; min-width:0; }
+  .hn-row-name{ font-weight: 700; font-size: 15px; }
+  .hn-row-sub{ font-size: 12px; color: var(--muted); margin-top: 2px; display:flex; gap:8px; flex-wrap:wrap; }
+  .hn-badge{
+    font-size: 11px; padding: 2px 8px; border-radius: 20px; border: 1px solid var(--line); color: var(--muted);
+  }
+  .hn-badge.called{ color: var(--red-bright); border-color: var(--red-bright); }
+  .hn-badge.done{ color: #2f7a45; border-color: #4a8f5c; }
+  .hn-badge.cancelled{ color: var(--muted); }
+  .hn-row-actions{ display:flex; gap: 6px; flex-shrink:0; }
+  .hn-abtn{
+    font-size: 11px; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--bg-deep); color: var(--paper); cursor:pointer; white-space:nowrap;
+  }
+  .hn-abtn.call{ border-color: var(--gold-soft); color: var(--gold); }
+  .hn-abtn.done{ border-color: #4a8f5c; color: #2f7a45; }
+  .hn-abtn.cancel{ color: var(--muted); }
+
+  /* history panel */
+  .hn-history{ margin-bottom: 16px; }
+  .hn-history-day + .hn-history-day{ margin-top: 8px; }
+  .hn-history-toggle{
+    width:100%; display:flex; justify-content:space-between; align-items:center;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 16px; color: var(--paper); font-size: 13px; font-weight: 700; cursor:pointer;
+  }
+  .hn-history-toggle .hn-chev{ color: var(--gold); font-size: 11px; font-weight: 700; }
+  .hn-history-list{ margin-top: 8px; }
+  .hn-history-row{
+    display:flex; align-items:center; gap: 12px;
+    background: rgba(0,0,0,0.02); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 14px; margin-bottom: 8px; opacity: 0.9;
+  }
+  .hn-history-row .hn-row-num{ font-size: 16px; }
+  .hn-history-row .hn-row-name{ font-size: 14px; }
+
+  @media (max-width: 400px){
+    .hn-row{ flex-wrap: wrap; }
+    .hn-row-actions{ width: 100%; justify-content:flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hn-root" id="hnRoot"></div>
+
+<script>
+(function(){
+  const root = document.getElementById('hnRoot');
+  const FIREBASE_DB_URL = 'https://hounantei-waiting-default-rtdb.firebaseio.com';
+  const STATE_PATH = '/marghetta/state';
+  const TICKET_KEY = 'mg-my-ticket-id';
+  const APP_VERSION = 'V202608271200'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const DAY_MS = 24*60*60*1000;
+  const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
+
+  const LANGS = [
+    { code: 'ja', label: '日本語' },
+    { code: 'en', label: 'English' },
+    { code: 'ko', label: '한국어' },
+    { code: 'zh-tw', label: '繁體中文' },
+    { code: 'zh-cn', label: '简体中文' }
+  ];
+
+  const T = {
+    ja: {
+      subCustomer: '唐人町店　待受け受付', subTicket: '受付票',
+      tabCheckin: '受付', tabStatus: '只今の待ち状況',
+      statusHeading: '待ち状況', statusCountLabel: '現在お待ちの組数', statusLongestLabel: '最長待ち時間',
+      statusListLabel: '受付中の番号', statusEmpty: '現在、待っているお客様はいません', minUnit: '分',
+      noticeText: 'ただいま満席です。下記にご入力のうえ受付してください',
+      waitingSuffix: (n)=> '（現在'+n+'組お待ちです）',
+      countLabelB: '人数', countLabelR: 'を選んでください', unit: '名',
+      nameLabelB: 'お名前', namePlaceholder: '例）田中',
+      seatLabelB: '席のご希望',
+      seats: { 'table':'テーブル', 'counter':'カウンター', 'either':'どちらでも' },
+      submit: '受付する', submitting: '受付中…',
+      errName: 'お名前をご入力ください', errNetwork: '通信に失敗しました。もう一度お試しください',
+      ticketNo: '受付番号', party: (name,count)=> name+' 様　'+count+'名',
+      wish: (seat)=> 'ご希望: '+seat,
+      statusWaiting: (t)=> '順番になりましたらお呼びいたします（'+t+'）',
+      statusCalled: 'お待たせいたしました。店内スタッフへお声掛けください。',
+      statusEnded: 'このチケットは終了しています',
+      statusDone: 'ご来店ありがとうございました。',
+      newEntry: '新しい受付をする',
+      justNow: 'たった今', waitMin: (n)=> n+'分待ち',
+      gamesLabel: 'お待ちの間に遊べます',
+      game1: 'めんたいこディフェンス', game2: 'マルゲッタ性格診断'
+    },
+    en: {
+      subCustomer: 'Karatomachi — Waitlist Check-in', subTicket: 'Your Ticket',
+      tabCheckin: 'Check-in', tabStatus: 'Current Wait',
+      statusHeading: 'Wait Status', statusCountLabel: 'Parties waiting', statusLongestLabel: 'Longest wait',
+      statusListLabel: 'Ticket numbers in queue', statusEmpty: 'No one is currently waiting.', minUnit: 'min',
+      noticeText: 'We are currently full. Please fill in your details below to join the wait list.',
+      waitingSuffix: (n)=> ' ('+n+' parties waiting)',
+      countLabelB: 'Party size', countLabelR: '', unit: 'guests',
+      nameLabelB: 'Name', namePlaceholder: 'e.g. Smith',
+      seatLabelB: 'Seating preference',
+      seats: { 'table':'Table', 'counter':'Counter', 'either':'Either' },
+      submit: 'Join wait list', submitting: 'Submitting…',
+      errName: 'Please enter your name', errNetwork: 'Something went wrong. Please try again.',
+      ticketNo: 'Ticket No.', party: (name,count)=> name+' · Party of '+count,
+      wish: (seat)=> 'Preference: '+seat,
+      statusWaiting: (t)=> "We'll call your name when your table is ready ("+t+')',
+      statusCalled: "You're up! Please check in with our staff.",
+      statusEnded: 'This ticket has ended.',
+      statusDone: 'Thank you for visiting us!',
+      newEntry: 'Join the wait list again',
+      justNow: 'Just now', waitMin: (n)=> 'Waiting '+n+' min',
+      gamesLabel: 'Play while you wait',
+      game1: 'Mentaiko Defense', game2: 'Marghetta Personality Quiz'
+    },
+    ko: {
+      subCustomer: '가라토마치점 대기 접수', subTicket: '접수증',
+      tabCheckin: '접수', tabStatus: '현재 대기 현황',
+      statusHeading: '대기 현황', statusCountLabel: '대기 중인 팀 수', statusLongestLabel: '최장 대기 시간',
+      statusListLabel: '대기 중인 번호', statusEmpty: '현재 대기 중인 손님이 없습니다.', minUnit: '분',
+      noticeText: '현재 만석입니다. 아래 항목을 작성하여 접수해 주세요.',
+      waitingSuffix: (n)=> ' (현재 '+n+'팀 대기 중)',
+      countLabelB: '인원수', countLabelR: '를 선택해 주세요', unit: '명',
+      nameLabelB: '성함', namePlaceholder: '예） 김',
+      seatLabelB: '좌석 희망',
+      seats: { 'table':'테이블', 'counter':'카운터석', 'either':'상관없음' },
+      submit: '접수하기', submitting: '접수 중…',
+      errName: '성함을 입력해 주세요', errNetwork: '통신에 실패했습니다. 다시 시도해 주세요.',
+      ticketNo: '접수 번호', party: (name,count)=> name+'님 · '+count+'명',
+      wish: (seat)=> '희망 좌석: '+seat,
+      statusWaiting: (t)=> '순서가 되면 호출해 드립니다 ('+t+')',
+      statusCalled: '호출되었습니다. 매장 직원에게 말씀해 주세요.',
+      statusEnded: '이 접수증은 종료되었습니다.',
+      statusDone: '방문해 주셔서 감사합니다.',
+      newEntry: '다시 접수하기',
+      justNow: '방금 전', waitMin: (n)=> n+'분 대기',
+      gamesLabel: '대기 중에 즐겨보세요',
+      game1: '멘타이코 디펜스', game2: '마루겟타 성격 진단'
+    },
+    'zh-tw': {
+      subCustomer: '唐人町店　候位登記', subTicket: '候位券',
+      tabCheckin: '登記', tabStatus: '目前候位狀況',
+      statusHeading: '候位狀況', statusCountLabel: '目前候位組數', statusLongestLabel: '最長等候時間',
+      statusListLabel: '候位中的號碼', statusEmpty: '目前沒有客人在候位。', minUnit: '分鐘',
+      noticeText: '目前客滿中，請填寫以下資料完成候位登記',
+      waitingSuffix: (n)=> '（目前候位 '+n+' 組）',
+      countLabelB: '人數', countLabelR: '請選擇', unit: '位',
+      nameLabelB: '姓名', namePlaceholder: '例）陳',
+      seatLabelB: '座位偏好',
+      seats: { 'table':'桌位', 'counter':'吧檯', 'either':'皆可' },
+      submit: '完成登記', submitting: '登記中…',
+      errName: '請輸入姓名', errNetwork: '連線失敗，請再試一次',
+      ticketNo: '候位號碼', party: (name,count)=> name+' · '+count+'位',
+      wish: (seat)=> '座位偏好：'+seat,
+      statusWaiting: (t)=> '輪到您時將會叫號（'+t+'）',
+      statusCalled: '已叫號，請洽店內服務人員',
+      statusEnded: '此候位券已結束',
+      statusDone: '感謝您的光臨。',
+      newEntry: '重新登記',
+      justNow: '剛剛', waitMin: (n)=> '已等候 '+n+' 分鐘',
+      gamesLabel: '候位期間可以玩玩看',
+      game1: '明太子防衛戰', game2: 'Marghetta 性格測驗'
+    },
+    'zh-cn': {
+      subCustomer: '唐人町店　候位登记', subTicket: '候位券',
+      tabCheckin: '登记', tabStatus: '目前候位状况',
+      statusHeading: '候位状况', statusCountLabel: '目前候位组数', statusLongestLabel: '最长等候时间',
+      statusListLabel: '候位中的号码', statusEmpty: '目前没有客人在候位。', minUnit: '分钟',
+      noticeText: '目前客满中，请填写以下资料完成候位登记',
+      waitingSuffix: (n)=> '（目前候位 '+n+' 组）',
+      countLabelB: '人数', countLabelR: '请选择', unit: '位',
+      nameLabelB: '姓名', namePlaceholder: '例）陈',
+      seatLabelB: '座位偏好',
+      seats: { 'table':'桌位', 'counter':'吧台', 'either':'都可以' },
+      submit: '完成登记', submitting: '登记中…',
+      errName: '请输入姓名', errNetwork: '连接失败，请再试一次',
+      ticketNo: '候位号码', party: (name,count)=> name+' · '+count+'位',
+      wish: (seat)=> '座位偏好：'+seat,
+      statusWaiting: (t)=> '轮到您时将会叫号（'+t+'）',
+      statusCalled: '已叫号，请联系店内服务人员',
+      statusEnded: '此候位券已结束',
+      statusDone: '感谢您的光临。',
+      newEntry: '重新登记',
+      justNow: '刚刚', waitMin: (n)=> '已等候 '+n+' 分钟',
+      gamesLabel: '候位期间可以玩玩看',
+      game1: '明太子防卫战', game2: 'Marghetta 性格测验'
+    }
+  };
+  const SEAT_KEYS = ['table','counter','either'];
+
+  let state = { counter: 0, entries: [] };
+  let view = location.search.includes('staff=1') ? 'staff' : 'customer';
+  let customerSubview = 'checkin'; // 'checkin' | 'status' — customer-facing tabs only
+  let myTicketId = null;
+  let lang = 'ja';
+  let openHistoryDays = new Set();
+  let prunedThisSession = false;
+  let pollTimer = null;
+  let busy = false;
+  let lastKnownTicketStatus = null; // used to detect the waiting→called transition for the alert sound/vibration
+
+  function playCallAlert(){
+    // Two-tone chime via Web Audio API — no external file needed, works offline.
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      [ [880, 0], [1175, 0.18] ].forEach(([freq, delay])=>{
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, now + delay);
+        gain.gain.linearRampToValueAtTime(0.35, now + delay + 0.02);
+        gain.gain.linearRampToValueAtTime(0, now + delay + 0.32);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(now + delay);
+        osc.stop(now + delay + 0.34);
+      });
+      setTimeout(()=>{ try{ ctx.close(); }catch(e){} }, 800);
+    }catch(e){ /* Web Audio unavailable — silently skip */ }
+    try{ if(navigator.vibrate) navigator.vibrate([800,400,800,400,800,400,800,400,800]); }catch(e){ /* vibration unavailable — silently skip */ }
+  }
+
+  function markSVG(){
+    return '<svg viewBox="0 0 44 52" xmlns="http://www.w3.org/2000/svg">'+
+      '<path d="M22 4C11 4 6 15 6 27c0 13 6 21 16 21s16-8 16-21C38 15 33 4 22 4Z" fill="url(#mgGrad)"/>'+
+      '<path d="M13 15c1.5-2.6 3.4-3.8 4.4-2.6-1.2 1.6-.3 2.7 1.4 2 1.3-1.7 3.2-2.3 4-1-1.8 1-1 2.6 1 2.6 1.9-.6 3 .2 2.8 1.9" fill="none" stroke="#ffe3ae" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+
+      '<circle cx="16.5" cy="29" r="2.3" fill="#2a1c12"/>'+
+      '<circle cx="27.5" cy="29" r="2.3" fill="#2a1c12"/>'+
+      '<path d="M16.5 35q5.5 5.5 11 0" fill="none" stroke="#2a1c12" stroke-width="2.3" stroke-linecap="round"/>'+
+      '<defs><radialGradient id="mgGrad" cx="45%" cy="35%" r="70%">'+
+      '<stop offset="0%" stop-color="#f18a3f"/><stop offset="100%" stop-color="#d9611a"/>'+
+      '</radialGradient></defs></svg>';
+  }
+  function logoHTML(){
+    return '<div class="hn-mark">'+markSVG()+'</div>'+
+      '<h1 class="hn-word">マルゲッタ<span class="hn-dot"></span></h1>'+
+      '<div class="hn-tagline">めんたいこ生パスタの店</div>';
+  }
+  function gamesHTML(){
+    const tr = T[lang];
+    return '<div class="hn-games">'+
+      '<div class="hn-games-label">'+tr.gamesLabel+'</div>'+
+      '<div class="hn-games-list">'+
+        '<a class="hn-game-card" href="games/shooter.html" target="_blank" rel="noopener"><span class="hn-game-emoji">🎮</span><span>'+tr.game1+'</span></a>'+
+        '<a class="hn-game-card" href="games/mbti.html" target="_blank" rel="noopener"><span class="hn-game-emoji">🧠</span><span>'+tr.game2+'</span></a>'+
+      '</div></div>';
+  }
+
+  async function withRetry(fn, attempts){
+    attempts = attempts || 3;
+    let lastErr;
+    for(let i=0;i<attempts;i++){
+      try{ return await fn(); }
+      catch(e){
+        lastErr = e;
+        console.error('[マルゲッタ] storage call failed (attempt '+(i+1)+'/'+attempts+'):', e);
+        if(i < attempts-1) await new Promise(r=>setTimeout(r, 400 * (i+1)));
+      }
+    }
+    throw lastErr;
+  }
+
+  async function fbGet(path){
+    const res = await fetch(FIREBASE_DB_URL + path + '.json');
+    if(!res.ok) throw new Error('Firebase GET failed: HTTP ' + res.status);
+    return res.json();
+  }
+  async function fbPut(path, value){
+    const res = await fetch(FIREBASE_DB_URL + path + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(value)
+    });
+    if(!res.ok) throw new Error('Firebase PUT failed: HTTP ' + res.status);
+    return res.json();
+  }
+
+  async function loadState(){
+    try{
+      const data = await withRetry(()=>fbGet(STATE_PATH), 2);
+      if(data){ state = data; if(!Array.isArray(state.entries)) state.entries = []; if(typeof state.counter !== 'number') state.counter = 0; }
+    }catch(e){ /* unreachable — fall back to in-memory state */ }
+  }
+  async function saveState(){
+    await withRetry(()=>fbPut(STATE_PATH, state), 3);
+  }
+  async function verifyEntrySaved(id){
+    // Unlike loadState(), this does not swallow errors — callers need to know
+    // whether the confirmation read itself succeeded, not just fall back silently.
+    const data = await withRetry(()=>fbGet(STATE_PATH), 2);
+    if(data && Array.isArray(data.entries)){
+      return data.entries.some(e => e.id === id);
+    }
+    return false;
+  }
+  function loadMyTicket(){
+    try{ myTicketId = localStorage.getItem(TICKET_KEY) || null; }catch(e){ /* not available */ }
+  }
+  function saveMyTicket(id){
+    try{ localStorage.setItem(TICKET_KEY, id); }catch(e){ console.error('[マルゲッタ] failed to save ticket id:', e); }
+  }
+  function clearMyTicket(){
+    try{ localStorage.removeItem(TICKET_KEY); }catch(e){ console.error('[マルゲッタ] failed to clear ticket id:', e); }
+  }
+
+  function isToday(ts){
+    const d = new Date(ts), n = new Date();
+    return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate();
+  }
+  function dayKeyJa(ts){
+    const d = new Date(ts);
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function dayLabelJa(ts){
+    const d = new Date(ts);
+    const wd = ['日','月','火','水','木','金','土'][d.getDay()];
+    const md = (d.getMonth()+1)+'月'+d.getDate()+'日('+wd+')';
+    return isToday(ts) ? '本日 '+md : md;
+  }
+  function timeAgo(ts){
+    const tr = T[lang];
+    const min = Math.max(0, Math.floor((Date.now() - ts)/60000));
+    if(min < 1) return tr.justNow;
+    return tr.waitMin(min);
+  }
+
+  function render(){
+    if(view === 'staff') renderStaff(); else renderCustomer();
+  }
+
+  function tabsHTML(){
+    return '<div class="hn-tabs">'+
+      '<a class="hn-tab-link active" href="#" data-nav="staff">スタッフ</a>'+
+      '</div>';
+  }
+  function customerTabsHTML(){
+    const tr = T[lang];
+    return '<div class="hn-tabs" style="position:static; margin-bottom:14px; justify-content:center;">'+
+      '<a class="hn-tab-link '+(customerSubview==='checkin'?'active':'')+'" href="#" data-subview="checkin">'+tr.tabCheckin+'</a>'+
+      '<a class="hn-tab-link '+(customerSubview==='status'?'active':'')+'" href="#" data-subview="status">'+tr.tabStatus+'</a>'+
+      '</div>';
+  }
+  function bindCustomerTabs(){
+    root.querySelectorAll('[data-subview]').forEach(a=>{
+      a.onclick = (ev)=>{ ev.preventDefault(); customerSubview = a.getAttribute('data-subview'); render(); };
+    });
+  }
+  function langBarHTML(){
+    return '<div class="hn-langs">'+
+      LANGS.map(l=>'<button type="button" class="hn-lang-btn '+(lang===l.code?'active':'')+'" data-lang="'+l.code+'">'+l.label+'</button>').join('')+
+      '</div>';
+  }
+  function bindLangBar(){
+    root.querySelectorAll('[data-lang]').forEach(b=>{
+      b.onclick = ()=>{ lang = b.getAttribute('data-lang'); render(); };
+    });
+  }
+
+  function renderCustomer(){
+    if(customerSubview === 'status'){ renderCustomerStatus(); return; }
+
+    const tr = T[lang];
+    const myTicket = myTicketId ? state.entries.find(e => e.id === myTicketId) : null;
+    const waitingCount = state.entries.filter(e => e.status==='waiting' || e.status==='called').length;
+
+    if(myTicket){
+      // Alert with sound + vibration the moment this ticket flips to "called" —
+      // only fires on the transition itself, never on every re-render.
+      if(myTicket.status === 'called' && lastKnownTicketStatus !== 'called'){
+        playCallAlert();
+      }
+      lastKnownTicketStatus = myTicket.status;
+
+      root.innerHTML =
+        '<div class="hn-shell">'+
+        '<div class="hn-header">'+logoHTML()+
+        '<div class="hn-sub">'+tr.subTicket+'</div></div>'+
+        customerTabsHTML()+
+        langBarHTML()+
+        '<div class="hn-card hn-ticket">'+
+          '<div class="hn-ticket-label">'+tr.ticketNo+'</div>'+
+          '<div class="hn-ticket-bignum">No.'+myTicket.number+'</div>'+
+          '<div class="hn-ticket-name">'+escapeHTML(tr.party(myTicket.name, myTicket.count))+'</div>'+
+          '<div class="hn-ticket-meta">'+escapeHTML(tr.wish(tr.seats[myTicket.seat] || myTicket.seat))+'</div>'+
+          '<div class="hn-ticket-status '+(myTicket.status==='called'?'called':'')+'">'+
+            (myTicket.status==='called' ? tr.statusCalled :
+             myTicket.status==='waiting' ? tr.statusWaiting(timeAgo(myTicket.createdAt)) :
+             myTicket.status==='done' ? tr.statusDone :
+             tr.statusEnded) +
+          '</div>'+
+          (myTicket.status==='waiting' ? gamesHTML() : '')+
+          (myTicket.status!=='waiting' && myTicket.status!=='called' ?
+            '<button class="hn-back" id="hnNewEntry">'+tr.newEntry+'</button>' : '')+
+        '</div></div>';
+      if(document.getElementById('hnNewEntry')){
+        document.getElementById('hnNewEntry').onclick = async ()=>{ myTicketId=null; lastKnownTicketStatus=null; await clearMyTicket(); render(); };
+      }
+      bindCustomerTabs(); bindLangBar();
+      return;
+    }
+
+    root.innerHTML =
+      '<div class="hn-shell">'+
+      '<div class="hn-header">'+logoHTML()+
+      '<div class="hn-sub">'+tr.subCustomer+'</div></div>'+
+      customerTabsHTML()+
+      langBarHTML()+
+      '<div class="hn-card">'+
+        '<div class="hn-notice"><span class="dot"></span>'+tr.noticeText+
+          '<span class="hn-notice-count">'+tr.waitingSuffix(waitingCount)+'</span></div>'+
+        '<div class="hn-field"><span class="hn-label"><b>'+tr.countLabelB+'</b>'+tr.countLabelR+'</span>'+
+          '<div class="hn-stepper">'+
+            '<button type="button" class="hn-stepbtn" id="hnMinus">−</button>'+
+            '<div class="hn-count" id="hnCountVal">2<small>'+tr.unit+'</small></div>'+
+            '<button type="button" class="hn-stepbtn" id="hnPlus">＋</button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="hn-field"><span class="hn-label"><b>'+tr.nameLabelB+'</b></span>'+
+          '<input class="hn-input" id="hnName" placeholder="'+tr.namePlaceholder+'" maxlength="20">'+
+        '</div>'+
+        '<div class="hn-field"><span class="hn-label"><b>'+tr.seatLabelB+'</b></span>'+
+          '<div class="hn-seats">'+
+            SEAT_KEYS.map((k,i)=>'<label class="hn-seat"><input type="radio" name="hnSeat" value="'+k+'" '+(i===2?'checked':'')+'><span>'+tr.seats[k]+'</span></label>').join('')+
+          '</div>'+
+        '</div>'+
+        '<button class="hn-submit" id="hnSubmit">'+tr.submit+'</button>'+
+        '<div class="hn-err" id="hnErr"></div>'+
+      '</div></div>';
+
+    let count = 2;
+    const countEl = document.getElementById('hnCountVal');
+    document.getElementById('hnMinus').onclick = ()=>{ count = Math.max(1,count-1); countEl.innerHTML = count+'<small>'+tr.unit+'</small>'; };
+    document.getElementById('hnPlus').onclick = ()=>{ count = Math.min(20,count+1); countEl.innerHTML = count+'<small>'+tr.unit+'</small>'; };
+
+    document.getElementById('hnSubmit').onclick = async ()=>{
+      const name = document.getElementById('hnName').value.trim();
+      const errEl = document.getElementById('hnErr');
+      if(!name){ errEl.textContent = tr.errName; return; }
+      const seatKey = document.querySelector('input[name="hnSeat"]:checked').value;
+      const btn = document.getElementById('hnSubmit');
+      btn.disabled = true; btn.textContent = tr.submitting;
+
+      await loadState();
+      const today = dayKeyJa(Date.now());
+      if(state.counterDay && state.counterDay !== today){
+        // A new day has started since the last ticket was issued — start
+        // numbering over from 1 instead of carrying on from yesterday's count.
+        state.counter = 0;
+      }
+      state.counterDay = today;
+      state.counter += 1;
+      const entry = {
+        id: 'w'+Date.now()+Math.random().toString(36).slice(2,6),
+        number: state.counter,
+        name, count, seat: seatKey,
+        status: 'waiting',
+        createdAt: Date.now()
+      };
+      state.entries.push(entry);
+
+      // Move to the ticket screen right away — saving happens in the background.
+      // (The save itself reliably lands even on the rare occasion the client-side
+      // acknowledgement is slow or drops, so there's no need to block on it here.)
+      myTicketId = entry.id;
+      lastKnownTicketStatus = entry.status;
+      render();
+
+      saveState().catch(saveErr=>{
+        console.error('[マルゲッタ] saveState reported an error, verifying against storage:', saveErr);
+        verifyEntrySaved(entry.id).then(ok=>{
+          if(!ok) console.error('[マルゲッタ] entry could not be confirmed as saved:', entry.id);
+        }).catch(verifyErr=>{
+          console.error('[マルゲッタ] verification read also failed:', verifyErr);
+        });
+      });
+      saveMyTicket(myTicketId);
+    };
+    bindCustomerTabs(); bindLangBar();
+  }
+
+  function renderCustomerStatus(){
+    const tr = T[lang];
+    const active = state.entries.filter(e => e.status==='waiting' || e.status==='called')
+      .sort((a,b)=>a.number-b.number);
+    const longestWaitMin = active.length ? Math.max(...active.map(e=>Math.floor((Date.now()-e.createdAt)/60000))) : 0;
+
+    root.innerHTML =
+      '<div class="hn-shell">'+
+      '<div class="hn-header">'+logoHTML()+
+      '<div class="hn-sub">'+tr.statusHeading+'</div></div>'+
+      customerTabsHTML()+
+      langBarHTML()+
+      '<div class="hn-summary">'+
+        '<div class="hn-summary-item"><div class="hn-summary-num">'+active.length+'</div><div class="hn-summary-label">'+tr.statusCountLabel+'</div></div>'+
+        '<div class="hn-summary-item"><div class="hn-summary-num">'+(active.length? longestWaitMin+tr.minUnit : '−')+'</div><div class="hn-summary-label">'+tr.statusLongestLabel+'</div></div>'+
+      '</div>'+
+      '<div class="hn-card">'+
+        (active.length===0 ? '<div class="hn-empty">'+tr.statusEmpty+'</div>' :
+          '<div class="hn-label" style="margin-bottom:10px;">'+tr.statusListLabel+'</div>'+
+          '<div style="display:flex; flex-wrap:wrap; gap:8px;">'+
+            active.map(e=>'<span class="hn-badge '+(e.status==='called'?'called':'')+'" style="font-size:13px; padding:6px 12px;">No.'+e.number+'</span>').join('')+
+          '</div>')+
+      '</div></div>';
+    bindCustomerTabs(); bindLangBar();
+  }
+
+  function seatLabel(key){
+    return (T.ja.seats[key]) || key;
+  }
+
+  function renderStaff(){
+    const active = state.entries.filter(e => e.status==='waiting' || e.status==='called')
+      .sort((a,b)=>a.number-b.number);
+    const waitingOnly = active.filter(e=>e.status==='waiting');
+    const longestWaitMin = active.length ? Math.max(...active.map(e=>Math.floor((Date.now()-e.createdAt)/60000))) : 0;
+    const historyCutoff = Date.now() - HISTORY_WINDOW_MS;
+    const historyEntries = state.entries.filter(e => (e.status==='done' || e.status==='cancelled') && e.createdAt >= historyCutoff)
+      .sort((a,b)=>b.createdAt-a.createdAt);
+    const historyGroups = [];
+    const historyGroupsByKey = {};
+    historyEntries.forEach(e=>{
+      const key = dayKeyJa(e.createdAt);
+      if(!historyGroupsByKey[key]){
+        historyGroupsByKey[key] = { key: key, label: dayLabelJa(e.createdAt), items: [] };
+        historyGroups.push(historyGroupsByKey[key]);
+      }
+      historyGroupsByKey[key].items.push(e);
+    });
+    const todayKey = dayKeyJa(Date.now());
+    const todayGroup = historyGroupsByKey[todayKey] || null;
+    const pastGroups = historyGroups.filter(g => g.key !== todayKey);
+    const todayOpen = openHistoryDays.has(todayKey);
+
+    root.innerHTML =
+      '<div class="hn-shell wide">'+ tabsHTML() +
+      '<div class="hn-header">'+logoHTML()+
+      '<div class="hn-sub">スタッフ用 ウエイティング管理</div></div>'+
+      '<div class="hn-summary">'+
+        '<div class="hn-summary-item"><div class="hn-summary-num">'+active.length+'</div><div class="hn-summary-label">現在お待ちの組数</div></div>'+
+        '<div class="hn-summary-item"><div class="hn-summary-num">'+waitingOnly.length+'</div><div class="hn-summary-label">未呼出</div></div>'+
+        '<div class="hn-summary-item"><div class="hn-summary-num">'+(active.length? longestWaitMin+'分' : '−')+'</div><div class="hn-summary-label">最長待ち時間</div></div>'+
+      '</div>'+
+      '<div class="hn-history">'+
+        '<button class="hn-history-toggle" data-hist-key="'+todayKey+'">'+
+          '<span>本日の対応済みお客様（'+(todayGroup?todayGroup.items.length:0)+'組）</span>'+
+          '<span class="hn-chev">'+(todayOpen?'閉じる ▲':'開く ▼')+'</span>'+
+        '</button>'+
+        (todayOpen ? '<div class="hn-history-list">'+
+          (!todayGroup || todayGroup.items.length===0 ? '<div class="hn-empty">本日対応済みのお客様はまだいません</div>' :
+            todayGroup.items.map(historyRowHTML).join(''))+
+          '</div>' : '')+
+      '</div>'+
+      '<div class="hn-card">'+
+        '<div class="hn-staffbar"><span class="hn-updated">'+active.length+'組が待機中です</span>'+
+        '<button class="hn-reset" id="hnReset">本日の受付をリセット</button></div>'+
+        (active.length===0 ? '<div class="hn-empty">現在、待っているお客様はいません</div>' :
+          active.map(rowHTML).join('')) +
+      '</div>'+
+      (pastGroups.length===0 ? '' :
+        '<div class="hn-label" style="margin:20px 2px 8px;">過去の履歴</div>'+
+        '<div class="hn-history">'+
+          pastGroups.map(function(g){
+            const open = openHistoryDays.has(g.key);
+            return '<div class="hn-history-day">'+
+              '<button class="hn-history-toggle" data-hist-key="'+g.key+'">'+
+                '<span>'+g.label+'　対応済み（'+g.items.length+'組）</span>'+
+                '<span class="hn-chev">'+(open?'閉じる ▲':'開く ▼')+'</span>'+
+              '</button>'+
+              (open ? '<div class="hn-history-list">'+g.items.map(historyRowHTML).join('')+'</div>' : '')+
+            '</div>';
+          }).join('')+
+        '</div>')+
+      '</div>';
+    bindTabs();
+
+    root.querySelectorAll('[data-hist-key]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const key = btn.getAttribute('data-hist-key');
+        if(openHistoryDays.has(key)) openHistoryDays.delete(key); else openHistoryDays.add(key);
+        render();
+      };
+    });
+    document.getElementById('hnReset').onclick = async ()=>{
+      if(!confirm('待機中のお客様をクリアし、受付番号を1からリセットします。過去7日間の対応履歴は保持されます。よろしいですか？')) return;
+      const now = Date.now();
+      const cutoff = now - HISTORY_WINDOW_MS;
+      state.entries.forEach(e=>{
+        if(e.status==='waiting' || e.status==='called'){ e.status='cancelled'; e.finishedAt = now; }
+      });
+      state.entries = state.entries.filter(e => e.createdAt >= cutoff);
+      state.counter = 0;
+      state.counterDay = dayKeyJa(now);
+      await saveState();
+      render();
+    };
+    root.querySelectorAll('[data-act]').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const id = btn.getAttribute('data-id');
+        const act = btn.getAttribute('data-act');
+        const entry = state.entries.find(e=>e.id===id);
+        if(!entry) return;
+        if(act==='call') entry.status='called';
+        if(act==='done'){ entry.status='done'; entry.finishedAt = Date.now(); }
+        if(act==='cancel'){ entry.status='cancelled'; entry.finishedAt = Date.now(); }
+        await saveState();
+        render();
+      };
+    });
+  }
+
+  function clockTimeJa(ts){
+    const d = new Date(ts);
+    return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  }
+
+  function rowHTML(e){
+    return '<div class="hn-row '+(e.status==='called'?'called':'')+'">'+
+      '<div class="hn-row-num">'+e.number+'</div>'+
+      '<div class="hn-row-main">'+
+        '<div class="hn-row-name">'+escapeHTML(e.name)+' 様　'+e.count+'名</div>'+
+        '<div class="hn-row-sub"><span>'+seatLabel(e.seat)+'</span><span>'+clockTimeJa(e.createdAt)+'受付</span><span>'+timeAgoJa(e.createdAt)+'</span>'+
+          '<span class="hn-badge '+(e.status==='called'?'called':'')+'">'+(e.status==='called'?'呼出済':'待機中')+'</span></div>'+
+      '</div>'+
+      '<div class="hn-row-actions">'+
+        (e.status==='waiting' ? '<button class="hn-abtn call" data-act="call" data-id="'+e.id+'">呼び出す</button>' : '')+
+        '<button class="hn-abtn done" data-act="done" data-id="'+e.id+'">案内完了</button>'+
+        '<button class="hn-abtn cancel" data-act="cancel" data-id="'+e.id+'">取消</button>'+
+      '</div></div>';
+  }
+
+  function historyRowHTML(e){
+    const waited = e.finishedAt ? Math.max(0, Math.floor((e.finishedAt - e.createdAt)/60000)) : null;
+    const statusLabel = e.status==='done' ? '案内済み' : '取消';
+    return '<div class="hn-history-row">'+
+      '<div class="hn-row-num">'+e.number+'</div>'+
+      '<div class="hn-row-main">'+
+        '<div class="hn-row-name">'+escapeHTML(e.name)+' 様　'+e.count+'名</div>'+
+        '<div class="hn-row-sub"><span>'+seatLabel(e.seat)+'</span><span>'+clockTimeJa(e.createdAt)+'受付</span>'+
+          (waited!==null ? '<span>待ち時間 '+waited+'分</span>' : '')+
+          '<span class="hn-badge '+(e.status==='done'?'done':'cancelled')+'">'+statusLabel+'</span></div>'+
+      '</div></div>';
+  }
+
+  function timeAgoJa(ts){
+    const min = Math.max(0, Math.floor((Date.now() - ts)/60000));
+    if(min < 1) return 'たった今';
+    return min + '分待ち';
+  }
+
+  function bindTabs(){
+    root.querySelectorAll('[data-nav]').forEach(a=>{
+      a.onclick = (ev)=>{ ev.preventDefault(); view = a.getAttribute('data-nav'); render(); };
+    });
+  }
+
+  function escapeHTML(s){
+    return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function isEditingForm(){
+    // The customer entry form (no ticket yet) has live text/selection input.
+    // Skip re-rendering it once it's already on screen, so background polling
+    // doesn't wipe what someone typed — but only once it actually exists;
+    // otherwise the very first render would never happen.
+    return view === 'customer' && !myTicketId && !!root.querySelector('#hnSubmit');
+  }
+
+  async function tick(){
+    if(busy) return;
+    busy = true;
+    try{
+      await loadState();
+      if(view==='customer' && myTicketId){
+        const myTicket = state.entries.find(e => e.id === myTicketId);
+        if(myTicket && !isToday(myTicket.createdAt)){
+          // A new day has started — don't keep showing yesterday's ticket
+          // (whatever its status) on the customer's phone. Forget it locally
+          // so re-opening the page or re-scanning the QR shows a fresh form.
+          myTicketId = null;
+          lastKnownTicketStatus = null;
+          await clearMyTicket();
+        }
+      }
+      if(view==='staff' && !prunedThisSession){
+        // One-time per staff session: drop finished entries past the 7-day
+        // history window so the Firebase state doesn't grow unbounded.
+        prunedThisSession = true;
+        const cutoff = Date.now() - HISTORY_WINDOW_MS;
+        const before = state.entries.length;
+        state.entries = state.entries.filter(e => !((e.status==='done'||e.status==='cancelled') && e.createdAt < cutoff));
+        if(state.entries.length !== before) await saveState();
+      }
+      if(!isEditingForm()) render();
+    }
+    catch(e){ /* ignore transient errors */ }
+    busy = false;
+  }
+
+  async function checkForUpdate(){
+    try{
+      const res = await fetch('./version.json?t=' + Date.now(), { cache: 'no-store' });
+      if(!res.ok) return;
+      const data = await res.json();
+      if(data && data.v && data.v !== APP_VERSION && !isEditingForm()){
+        // A new version has been deployed — reload so this page (and anyone
+        // who's had it open a while, e.g. a waiting customer's ticket screen)
+        // picks up the latest code. Skipped only while someone's actively
+        // typing into the check-in form, so nothing gets wiped mid-entry;
+        // it will simply retry on the next check.
+        location.reload();
+      }
+    }catch(e){ /* offline or blocked — just retry on the next interval */ }
+  }
+
+  (async function init(){
+    root.innerHTML = '<div class="hn-shell"><div class="hn-header"><div class="hn-sub">読み込み中…</div></div></div>';
+    await loadMyTicket();
+    await tick();
+    pollTimer = setInterval(tick, 4000);
+    setInterval(checkForUpdate, 30000);
+  })();
+})();
+</script>
+
+</body>
+</html>
