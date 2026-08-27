@@ -89,7 +89,7 @@
     padding: 5px 10px; letter-spacing: 0.05em;
     background: rgba(255,255,255,0.88);
   }
-  .hn-tab-link.active{ color: #fff6ee; background: var(--gold-soft); border-color: var(--gold-soft); font-weight:700; }
+  .hn-tab-link.active{ color: #fff8ef; background: var(--paper); border-color: var(--paper); font-weight:700; }
 
   /* language selector */
   .hn-langs{ display:flex; gap: 6px; justify-content:center; flex-wrap: wrap; margin-bottom: 18px; }
@@ -97,7 +97,7 @@
     font-size: 12px; padding: 6px 12px; border-radius: 20px;
     border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor:pointer;
   }
-  .hn-lang-btn.active{ border-color: var(--gold-soft); color: var(--gold-soft); background: rgba(201,88,28,0.10); font-weight: 700; }
+  .hn-lang-btn.active{ border-color: var(--paper); color: #fff8ef; background: var(--paper); font-weight: 700; }
 
   /* card */
   .hn-card{
@@ -279,7 +279,7 @@
   const FIREBASE_DB_URL = 'https://hounantei-waiting-default-rtdb.firebaseio.com';
   const STATE_PATH = '/marghetta/state';
   const TICKET_KEY = 'mg-my-ticket-id';
-  const APP_VERSION = 'V202608271545'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202608271600'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
