@@ -268,7 +268,7 @@
   const TICKET_KEY = 'mg-my-ticket-id';
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
-  const APP_VERSION = 'V202608271930'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202608272000'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -300,7 +300,7 @@
       statusWaiting: (t)=> '順番になりましたらお呼びいたします（'+t+'）',
       statusCalled: 'お待たせいたしました。店内スタッフへお声掛けください。',
       statusEnded: 'このチケットは終了しています',
-      statusDone: 'ご来店ありがとうございました。まもなく公式Instagramに移動します',
+      statusDone: 'マルゲッタを満喫してください。まもなく公式Instagramに移動します',
       newEntry: '新しい受付をする',
       justNow: 'たった今', waitMin: (n)=> n+'分待ち',
       gamesLabel: 'お待ちの間に遊べます',
@@ -326,7 +326,7 @@
       statusWaiting: (t)=> "We'll call your name when your table is ready ("+t+')',
       statusCalled: "You're up! Please check in with our staff.",
       statusEnded: 'This ticket has ended.',
-      statusDone: 'Thank you for visiting us! Redirecting to our Instagram…',
+      statusDone: 'Enjoy your meal at Marghetta! Redirecting to our Instagram…',
       newEntry: 'Join the wait list again',
       justNow: 'Just now', waitMin: (n)=> 'Waiting '+n+' min',
       gamesLabel: 'Play while you wait',
@@ -351,7 +351,7 @@
       statusWaiting: (t)=> '순서가 되면 호출해 드립니다 ('+t+')',
       statusCalled: '호출되었습니다. 매장 직원에게 말씀해 주세요.',
       statusEnded: '이 접수증은 종료되었습니다.',
-      statusDone: '방문해 주셔서 감사합니다. 잠시 후 공식 인스타그램으로 이동합니다',
+      statusDone: '마르게타를 마음껏 즐겨주세요. 잠시 후 공식 인스타그램으로 이동합니다',
       newEntry: '다시 접수하기',
       justNow: '방금 전', waitMin: (n)=> n+'분 대기',
       gamesLabel: '대기 중에 즐겨보세요',
@@ -376,7 +376,7 @@
       statusWaiting: (t)=> '輪到您時將會叫號（'+t+'）',
       statusCalled: '已叫號，請洽店內服務人員',
       statusEnded: '此候位券已結束',
-      statusDone: '感謝您的光臨。即將跳轉至官方Instagram',
+      statusDone: '請盡情享受Marghetta。即將跳轉至官方Instagram',
       newEntry: '重新登記',
       justNow: '剛剛', waitMin: (n)=> '已等候 '+n+' 分鐘',
       gamesLabel: '候位期間可以玩玩看',
@@ -401,7 +401,7 @@
       statusWaiting: (t)=> '轮到您时将会叫号（'+t+'）',
       statusCalled: '已叫号，请联系店内服务人员',
       statusEnded: '此候位券已结束',
-      statusDone: '感谢您的光临。即将跳转至官方Instagram',
+      statusDone: '请尽情享受Marghetta。即将跳转至官方Instagram',
       newEntry: '重新登记',
       justNow: '刚刚', waitMin: (n)=> '已等候 '+n+' 分钟',
       gamesLabel: '候位期间可以玩玩看',
