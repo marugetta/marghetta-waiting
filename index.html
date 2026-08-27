@@ -266,7 +266,7 @@
   const FIREBASE_DB_URL = 'https://hounantei-waiting-default-rtdb.firebaseio.com';
   const STATE_PATH = '/marghetta/state';
   const TICKET_KEY = 'mg-my-ticket-id';
-  const APP_VERSION = 'V202608271700'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202608271730'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -282,7 +282,7 @@
     ja: {
       subCustomer: '唐人町店　順番待ち受付', subTicket: '受付票',
       tabCheckin: '受付', tabStatus: '只今の待ち状況',
-      statusHeading: '待ち状況', statusCountLabel: '現在お待ちの組数', statusLongestLabel: '最長待ち時間',
+      statusHeading: '待ち状況', statusCountLabel: '現在お待ちの組数', statusNextLabel: '次の受付番号', statusCurrentWaitLabel: '現在の待ち時間',
       statusListLabel: '受付中の番号', statusEmpty: '現在、待っているお客様はいません', minUnit: '分',
       noticeText: 'ただいま満席です。下記にご入力のうえ受付してください',
       waitingSuffix: (n)=> '（現在'+n+'組お待ちです）',
@@ -306,7 +306,7 @@
     en: {
       subCustomer: 'Karatomachi — Waitlist Check-in', subTicket: 'Your Ticket',
       tabCheckin: 'Check-in', tabStatus: 'Current Wait',
-      statusHeading: 'Wait Status', statusCountLabel: 'Parties waiting', statusLongestLabel: 'Longest wait',
+      statusHeading: 'Wait Status', statusCountLabel: 'Parties waiting', statusNextLabel: 'Next number', statusCurrentWaitLabel: 'Current wait',
       statusListLabel: 'Ticket numbers in queue', statusEmpty: 'No one is currently waiting.', minUnit: 'min',
       noticeText: 'We are currently full. Please fill in your details below to join the wait list.',
       waitingSuffix: (n)=> ' ('+n+' parties waiting)',
@@ -330,7 +330,7 @@
     ko: {
       subCustomer: '가라토마치점 대기 접수', subTicket: '접수증',
       tabCheckin: '접수', tabStatus: '현재 대기 현황',
-      statusHeading: '대기 현황', statusCountLabel: '대기 중인 팀 수', statusLongestLabel: '최장 대기 시간',
+      statusHeading: '대기 현황', statusCountLabel: '대기 중인 팀 수', statusNextLabel: '다음 번호', statusCurrentWaitLabel: '현재 대기 시간',
       statusListLabel: '대기 중인 번호', statusEmpty: '현재 대기 중인 손님이 없습니다.', minUnit: '분',
       noticeText: '현재 만석입니다. 아래 항목을 작성하여 접수해 주세요.',
       waitingSuffix: (n)=> ' (현재 '+n+'팀 대기 중)',
@@ -354,7 +354,7 @@
     'zh-tw': {
       subCustomer: '唐人町店　候位登記', subTicket: '候位券',
       tabCheckin: '登記', tabStatus: '目前候位狀況',
-      statusHeading: '候位狀況', statusCountLabel: '目前候位組數', statusLongestLabel: '最長等候時間',
+      statusHeading: '候位狀況', statusCountLabel: '目前候位組數', statusNextLabel: '下一號', statusCurrentWaitLabel: '目前等候時間',
       statusListLabel: '候位中的號碼', statusEmpty: '目前沒有客人在候位。', minUnit: '分鐘',
       noticeText: '目前客滿中，請填寫以下資料完成候位登記',
       waitingSuffix: (n)=> '（目前候位 '+n+' 組）',
@@ -378,7 +378,7 @@
     'zh-cn': {
       subCustomer: '唐人町店　候位登记', subTicket: '候位券',
       tabCheckin: '登记', tabStatus: '目前候位状况',
-      statusHeading: '候位状况', statusCountLabel: '目前候位组数', statusLongestLabel: '最长等候时间',
+      statusHeading: '候位状况', statusCountLabel: '目前候位组数', statusNextLabel: '下一号', statusCurrentWaitLabel: '目前等候时间',
       statusListLabel: '候位中的号码', statusEmpty: '目前没有客人在候位。', minUnit: '分钟',
       noticeText: '目前客满中，请填写以下资料完成候位登记',
       waitingSuffix: (n)=> '（目前候位 '+n+' 组）',
@@ -686,6 +686,7 @@
     const active = state.entries.filter(e => e.status==='waiting' || e.status==='called')
       .sort((a,b)=>a.number-b.number);
     const longestWaitMin = active.length ? Math.max(...active.map(e=>Math.floor((Date.now()-e.createdAt)/60000))) : 0;
+    const nextEntry = active.filter(e=>e.status==='waiting')[0] || null;
 
     root.innerHTML =
       '<div class="hn-shell">'+
@@ -695,7 +696,8 @@
       langBarHTML()+
       '<div class="hn-summary">'+
         '<div class="hn-summary-item"><div class="hn-summary-num">'+active.length+'</div><div class="hn-summary-label">'+tr.statusCountLabel+'</div></div>'+
-        '<div class="hn-summary-item"><div class="hn-summary-num">'+(active.length? longestWaitMin+tr.minUnit : '−')+'</div><div class="hn-summary-label">'+tr.statusLongestLabel+'</div></div>'+
+        '<div class="hn-summary-item"><div class="hn-summary-num" style="font-size:22px;">'+(nextEntry ? 'No.'+nextEntry.number : '−')+'</div><div class="hn-summary-label">'+tr.statusNextLabel+'</div></div>'+
+        '<div class="hn-summary-item"><div class="hn-summary-num">'+(active.length? longestWaitMin+tr.minUnit : '−')+'</div><div class="hn-summary-label">'+tr.statusCurrentWaitLabel+'</div></div>'+
       '</div>'+
       '<div class="hn-card">'+
         (active.length===0 ? '<div class="hn-empty">'+tr.statusEmpty+'</div>' :
