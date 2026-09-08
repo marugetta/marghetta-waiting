@@ -268,7 +268,8 @@
   const TICKET_KEY = 'mg-my-ticket-id';
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
-  const APP_VERSION = 'V202608272000'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const TICKET_STALE_MS = 3 * 60 * 60 * 1000; // forget the customer's local ticket this long after check-in
+  const APP_VERSION = 'V202609081700'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -901,10 +902,11 @@
       await loadState();
       if(view==='customer' && myTicketId){
         const myTicket = state.entries.find(e => e.id === myTicketId);
-        if(myTicket && !isToday(myTicket.createdAt)){
-          // A new day has started — don't keep showing yesterday's ticket
-          // (whatever its status) on the customer's phone. Forget it locally
-          // so re-opening the page or re-scanning the QR shows a fresh form.
+        if(myTicket && (Date.now() - myTicket.createdAt) >= TICKET_STALE_MS){
+          // It's been 3+ hours since check-in — don't keep showing this old
+          // ticket (whatever its status) on the customer's phone. Forget it
+          // locally so re-opening the page or re-scanning the QR shows a
+          // fresh form.
           myTicketId = null;
           lastKnownTicketStatus = null;
           await clearMyTicket();
