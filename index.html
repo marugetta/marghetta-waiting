@@ -279,7 +279,7 @@
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
   const TICKET_STALE_MS = 3 * 60 * 60 * 1000; // forget the customer's local ticket this long after check-in
-  const APP_VERSION = 'V202609221630'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202609221700'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -553,7 +553,19 @@
     return tr.waitMin(min);
   }
 
+  function setViewportZoomable(zoomable){
+    // The app locks pinch-zoom everywhere (maximum-scale=1.0) so form taps
+    // don't trigger accidental zooming — except the manga viewer, where the
+    // panels are too small to read at 1x on a phone.
+    const meta = document.querySelector('meta[name="viewport"]');
+    if(!meta) return;
+    meta.setAttribute('content', zoomable ?
+      'width=device-width, initial-scale=1.0' :
+      'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+  }
+
   function render(){
+    setViewportZoomable(view==='customer' && customerSubview==='checkin' && mangaOpen);
     if(view === 'staff') renderStaff(); else renderCustomer();
   }
 
