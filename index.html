@@ -177,14 +177,24 @@
   /* play-while-you-wait games */
   .hn-games{ margin-top: 20px; text-align:left; }
   .hn-games-label{ font-size: 12px; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 8px; text-align:center; }
-  .hn-games-list{ display:flex; gap: 10px; }
+  .hn-games-list{ display:flex; flex-wrap: wrap; gap: 10px; }
   .hn-game-card{
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    flex: 1 1 100px; display:flex; flex-direction:column; align-items:center; gap:4px;
     padding: 14px 8px; border-radius: 12px; border: 1px solid var(--line);
     background: var(--bg-deep); text-decoration:none; color: var(--paper);
-    font-size: 12px; font-weight: 700; text-align:center;
+    font-size: 12px; font-weight: 700; text-align:center; font-family: inherit; cursor:pointer;
   }
   .hn-game-card:active{ border-color: var(--gold-soft); background: rgba(232,114,31,0.10); }
+
+  /* manga viewer */
+  .hn-manga-nav{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    width:100%; margin: 0 0 14px; padding: 13px; border-radius: 12px; border:none;
+    background: var(--panel); color:var(--paper); font-family: inherit;
+    font-weight:700; font-size:14px; cursor:pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+  }
+  .hn-manga-nav.bottom{ margin: 14px 0 0; }
+  .hn-manga-img{ width:100%; height:auto; display:block; border-radius: 14px; box-shadow: 0 10px 26px rgba(0,0,0,0.15); }
   .hn-game-emoji{ font-size: 24px; }
 
   /* staff view */
@@ -269,7 +279,7 @@
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
   const TICKET_STALE_MS = 3 * 60 * 60 * 1000; // forget the customer's local ticket this long after check-in
-  const APP_VERSION = 'V202609081700'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202609221630'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -305,7 +315,8 @@
       newEntry: '新しい受付をする',
       justNow: 'たった今', waitMin: (n)=> n+'分待ち',
       gamesLabel: 'お待ちの間に遊べます',
-      game1: 'マルゲッタちゃんSHOOT！', game2: 'マルゲッタちゃんMBTI性格診断'
+      game1: 'マルゲッタちゃんSHOOT！', game2: 'マルゲッタちゃんMBTI性格診断',
+      mangaLabel: '必読！ふくやの明太子', mangaBack: '戻る'
     },
     en: {
       subCustomer: 'Karatomachi — Waitlist Check-in', subTicket: 'Your Ticket',
@@ -331,7 +342,8 @@
       newEntry: 'Join the wait list again',
       justNow: 'Just now', waitMin: (n)=> 'Waiting '+n+' min',
       gamesLabel: 'Play while you wait',
-      game1: 'Mentaiko Defense', game2: 'Marghetta Personality Quiz'
+      game1: 'Mentaiko Defense', game2: 'Marghetta Personality Quiz',
+      mangaLabel: 'Must-Read! Fukuya Mentaiko (JP)', mangaBack: 'Back'
     },
     ko: {
       subCustomer: '가라토마치점 대기 접수', subTicket: '접수증',
@@ -356,7 +368,8 @@
       newEntry: '다시 접수하기',
       justNow: '방금 전', waitMin: (n)=> n+'분 대기',
       gamesLabel: '대기 중에 즐겨보세요',
-      game1: '멘타이코 디펜스', game2: '마루겟타 성격 진단'
+      game1: '멘타이코 디펜스', game2: '마루겟타 성격 진단',
+      mangaLabel: '필독! 후쿠야 멘타이코 (일본어)', mangaBack: '뒤로'
     },
     'zh-tw': {
       subCustomer: '唐人町店　候位登記', subTicket: '候位券',
@@ -381,7 +394,8 @@
       newEntry: '重新登記',
       justNow: '剛剛', waitMin: (n)=> '已等候 '+n+' 分鐘',
       gamesLabel: '候位期間可以玩玩看',
-      game1: '明太子防衛戰', game2: 'Marghetta 性格測驗'
+      game1: '明太子防衛戰', game2: 'Marghetta 性格測驗',
+      mangaLabel: '必讀！福屋明太子（日文）', mangaBack: '返回'
     },
     'zh-cn': {
       subCustomer: '唐人町店　候位登记', subTicket: '候位券',
@@ -406,7 +420,8 @@
       newEntry: '重新登记',
       justNow: '刚刚', waitMin: (n)=> '已等候 '+n+' 分钟',
       gamesLabel: '候位期间可以玩玩看',
-      game1: '明太子防卫战', game2: 'Marghetta 性格测验'
+      game1: '明太子防卫战', game2: 'Marghetta 性格测验',
+      mangaLabel: '必读！福屋明太子（日文）', mangaBack: '返回'
     }
   };
   const SEAT_KEYS = ['table','counter','either'];
@@ -421,6 +436,7 @@
   let pollTimer = null;
   let busy = false;
   let lastKnownTicketStatus = null; // used to detect the waiting→called transition for the alert sound/vibration
+  let mangaOpen = false; // customer tapped the "必読！ふくやの明太子" card on the ticket screen
 
   function playCallAlert(){
     // Two-tone chime via Web Audio API — no external file needed, works offline.
@@ -455,6 +471,7 @@
       '<div class="hn-games-list">'+
         '<a class="hn-game-card" href="games/shooter.html" target="_blank" rel="noopener"><span class="hn-game-emoji">🎮</span><span>'+tr.game1+'</span></a>'+
         '<a class="hn-game-card" href="games/mbti.html" target="_blank" rel="noopener"><span class="hn-game-emoji">🧠</span><span>'+tr.game2+'</span></a>'+
+        '<button type="button" class="hn-game-card" id="hnMangaOpen"><span class="hn-game-emoji">📖</span><span>'+tr.mangaLabel+'</span></button>'+
       '</div></div>';
   }
 
@@ -583,6 +600,28 @@
       }
       lastKnownTicketStatus = myTicket.status;
 
+      if(myTicket.status !== 'waiting'){
+        // Don't let the manga stay open and hide an important status change
+        // (called / done / ended) that just arrived from the poll.
+        mangaOpen = false;
+      }
+
+      if(mangaOpen){
+        root.innerHTML =
+          '<div class="hn-shell">'+
+          '<div class="hn-header">'+logoHTML()+'</div>'+
+          '<button type="button" class="hn-manga-nav" id="hnMangaBackTop">← '+tr.mangaBack+'</button>'+
+          '<div class="hn-card">'+
+            '<img class="hn-manga-img" src="assets/fukuya-manga.webp" alt="'+escapeHTML(tr.mangaLabel)+'">'+
+          '</div>'+
+          '<button type="button" class="hn-manga-nav bottom" id="hnMangaBackBottom">← '+tr.mangaBack+'</button>'+
+          '</div>';
+        const closeManga = ()=>{ mangaOpen = false; render(); };
+        document.getElementById('hnMangaBackTop').onclick = closeManga;
+        document.getElementById('hnMangaBackBottom').onclick = closeManga;
+        return;
+      }
+
       root.innerHTML =
         '<div class="hn-shell">'+
         '<div class="hn-header">'+logoHTML()+
@@ -606,6 +645,9 @@
         '</div></div>';
       if(document.getElementById('hnNewEntry')){
         document.getElementById('hnNewEntry').onclick = async ()=>{ myTicketId=null; lastKnownTicketStatus=null; await clearMyTicket(); render(); };
+      }
+      if(document.getElementById('hnMangaOpen')){
+        document.getElementById('hnMangaOpen').onclick = ()=>{ mangaOpen = true; render(); };
       }
       bindCustomerTabs(); bindLangBar();
       return;
