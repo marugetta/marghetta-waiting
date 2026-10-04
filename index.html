@@ -279,7 +279,7 @@
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
   const TICKET_STALE_MS = 3 * 60 * 60 * 1000; // forget the customer's local ticket this long after check-in
-  const APP_VERSION = 'V202609221700'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202610051100'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -313,6 +313,7 @@
       statusEnded: 'このチケットは終了しています',
       statusDone: 'マルゲッタを満喫してください。まもなく公式Instagramに移動します',
       newEntry: '新しい受付をする',
+      cancelTicket: 'キャンセルする', cancelConfirm: 'この受付をキャンセルします。よろしいですか？',
       justNow: 'たった今', waitMin: (n)=> n+'分待ち',
       gamesLabel: 'お待ちの間に遊べます',
       game1: 'マルゲッタちゃんSHOOT！', game2: 'マルゲッタちゃんMBTI性格診断',
@@ -340,6 +341,7 @@
       statusEnded: 'This ticket has ended.',
       statusDone: 'Enjoy your meal at Marghetta! Redirecting to our Instagram…',
       newEntry: 'Join the wait list again',
+      cancelTicket: 'Cancel', cancelConfirm: 'Cancel this check-in? This cannot be undone.',
       justNow: 'Just now', waitMin: (n)=> 'Waiting '+n+' min',
       gamesLabel: 'Play while you wait',
       game1: 'Mentaiko Defense', game2: 'Marghetta Personality Quiz',
@@ -366,6 +368,7 @@
       statusEnded: '이 접수증은 종료되었습니다.',
       statusDone: '마르게타를 마음껏 즐겨주세요. 잠시 후 공식 인스타그램으로 이동합니다',
       newEntry: '다시 접수하기',
+      cancelTicket: '취소하기', cancelConfirm: '이 접수를 취소하시겠습니까?',
       justNow: '방금 전', waitMin: (n)=> n+'분 대기',
       gamesLabel: '대기 중에 즐겨보세요',
       game1: '멘타이코 디펜스', game2: '마루겟타 성격 진단',
@@ -392,6 +395,7 @@
       statusEnded: '此候位券已結束',
       statusDone: '請盡情享受Marghetta。即將跳轉至官方Instagram',
       newEntry: '重新登記',
+      cancelTicket: '取消登記', cancelConfirm: '確定要取消這筆候位登記嗎？',
       justNow: '剛剛', waitMin: (n)=> '已等候 '+n+' 分鐘',
       gamesLabel: '候位期間可以玩玩看',
       game1: '明太子防衛戰', game2: 'Marghetta 性格測驗',
@@ -418,6 +422,7 @@
       statusEnded: '此候位券已结束',
       statusDone: '请尽情享受Marghetta。即将跳转至官方Instagram',
       newEntry: '重新登记',
+      cancelTicket: '取消登记', cancelConfirm: '确定要取消这笔候位登记吗？',
       justNow: '刚刚', waitMin: (n)=> '已等候 '+n+' 分钟',
       gamesLabel: '候位期间可以玩玩看',
       game1: '明太子防卫战', game2: 'Marghetta 性格测验',
@@ -652,11 +657,22 @@
              tr.statusEnded) +
           '</div>'+
           (myTicket.status==='waiting' ? gamesHTML() : '')+
+          (myTicket.status==='waiting' ?
+            '<button class="hn-back" id="hnCancelTicket" style="color:var(--red-bright);">'+tr.cancelTicket+'</button>' : '')+
           (myTicket.status!=='waiting' && myTicket.status!=='called' ?
             '<button class="hn-back" id="hnNewEntry">'+tr.newEntry+'</button>' : '')+
         '</div></div>';
       if(document.getElementById('hnNewEntry')){
         document.getElementById('hnNewEntry').onclick = async ()=>{ myTicketId=null; lastKnownTicketStatus=null; await clearMyTicket(); render(); };
+      }
+      if(document.getElementById('hnCancelTicket')){
+        document.getElementById('hnCancelTicket').onclick = async ()=>{
+          if(!confirm(tr.cancelConfirm)) return;
+          await loadState();
+          const entry = state.entries.find(e=>e.id===myTicketId);
+          if(entry){ entry.status = 'cancelled'; entry.finishedAt = Date.now(); await saveState(); }
+          render();
+        };
       }
       if(document.getElementById('hnMangaOpen')){
         document.getElementById('hnMangaOpen').onclick = ()=>{ mangaOpen = true; render(); };
