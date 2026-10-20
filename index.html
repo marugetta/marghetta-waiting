@@ -279,7 +279,7 @@
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
   const TICKET_STALE_MS = 3 * 60 * 60 * 1000; // forget the customer's local ticket this long after check-in
-  const APP_VERSION = 'V202610051100'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202610201400'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -301,11 +301,12 @@
       noticeText: 'ただいま満席です。下記にご入力のうえ受付してください',
       waitingSuffix: (n)=> '（現在'+n+'組お待ちです）',
       countLabelB: '人数', countLabelR: 'を選んでください', unit: '名',
-      nameLabelB: 'お名前', namePlaceholder: '例）田中',
+      nameLabelB: 'お名前（ひらがな）', namePlaceholder: '例）たなか',
       seatLabelB: '席のご希望',
       seats: { 'table':'テーブル', 'counter':'カウンター', 'either':'どちらでも' },
       submit: '受付する', submitting: '受付中…',
       errName: 'お名前をご入力ください', errNetwork: '通信に失敗しました。もう一度お試しください',
+      errHiragana: 'お名前はひらがなでご入力ください',
       ticketNo: '受付番号', party: (name,count)=> name+' 様　'+count+'名',
       wish: (seat)=> 'ご希望: '+seat,
       statusWaiting: (t)=> '順番になりましたらお呼びいたします（'+t+'）',
@@ -718,6 +719,7 @@
       const name = document.getElementById('hnName').value.trim();
       const errEl = document.getElementById('hnErr');
       if(!name){ errEl.textContent = tr.errName; return; }
+      if(lang==='ja' && !isHiragana(name)){ errEl.textContent = tr.errHiragana; return; }
       const seatKey = document.querySelector('input[name="hnSeat"]:checked').value;
       const btn = document.getElementById('hnSubmit');
       btn.disabled = true; btn.textContent = tr.submitting;
@@ -955,6 +957,12 @@
 
   function escapeHTML(s){
     return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function isHiragana(s){
+    // Hiragana block + the long-vowel mark (ー) + plain/full-width spaces,
+    // so two-word names like "たなか　はなこ" still pass.
+    return /^[ぁ-ゖゝ-ゟー\s　]+$/.test(s);
   }
 
   function isEditingForm(){
