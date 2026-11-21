@@ -49,7 +49,7 @@
       radial-gradient(ellipse 400px 300px at 90% 10%, rgba(0,0,0,0.08), transparent 70%);
     pointer-events:none;
   }
-  .hn-shell{ max-width: 480px; margin: 0 auto; padding: 26px 20px 0; position:relative; }
+  .hn-shell{ width: 100%; max-width: 480px; margin: 0 auto; padding: 26px 20px 0; position:relative; }
   .hn-shell.wide{ max-width: 720px; }
 
   /* header */
@@ -260,6 +260,103 @@
   .hn-history-row .hn-row-num{ font-size: 16px; }
   .hn-history-row .hn-row-name{ font-size: 14px; }
 
+  /* pre-order: customer side */
+  .hn-order-prompt{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; margin-top: 18px; padding: 15px 12px; border-radius: 12px; border:none;
+    background: var(--paper); color:#fff8ef; font-family: inherit; font-size: 15px; font-weight: 700;
+    cursor:pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.18); line-height:1.4;
+  }
+  .hn-order-summary{
+    margin-top: 18px; text-align:left; padding: 14px; border-radius: 12px;
+    background: var(--bg-deep); border: 1px solid var(--line);
+  }
+  .hn-order-summary h3{ margin:0 0 8px; font-size: 14px; color: var(--gold); }
+  .hn-ol-row{ display:flex; justify-content:space-between; gap:10px; font-size: 13px; padding: 5px 0; border-bottom: 1px dashed var(--line); }
+  .hn-ol-opts{ display:block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .hn-ol-total{ display:flex; justify-content:space-between; font-weight: 900; font-size: 14px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+  .hn-ol-note{ font-size: 12px; color: var(--red); font-weight: 700; margin-top: 10px; }
+  .hn-order-done-msg{
+    background: var(--panel); border-radius: 14px; padding: 18px 16px; margin-bottom: 14px;
+    font-size: 15px; font-weight: 700; line-height: 1.7; text-align:center; color: var(--paper);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+  }
+
+  /* pre-order: menu */
+  .hn-menu-shell{ padding-bottom: 96px; }
+  .hn-menu-title{ text-align:center; font-weight:900; font-size: 18px; margin: 4px 0 12px; color: var(--paper); }
+  .hn-cat-tabs{ display:flex; gap:8px; overflow-x:auto; padding: 2px 2px 10px; margin-bottom: 6px; -webkit-overflow-scrolling: touch; }
+  .hn-cat-tab{
+    flex: 0 0 auto; padding: 8px 14px; border-radius: 20px; border: 1px solid var(--line);
+    background: rgba(255,255,255,0.88); color: var(--paper); font-family: inherit; font-size: 13px; font-weight:700; cursor:pointer; white-space:nowrap;
+  }
+  .hn-cat-tab.active{ background: var(--paper); color:#fff8ef; border-color: var(--paper); }
+  .hn-sub-title{ font-size: 13px; font-weight: 900; color: var(--paper); margin: 14px 2px 8px; }
+  .hn-menu-item{
+    display:flex; gap:12px; align-items:center; width:100%; text-align:left;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 10px; margin-bottom: 8px; font-family: inherit; color: var(--paper); cursor:pointer;
+  }
+  .hn-menu-item img, .hn-mi-noimg{ width: 84px; height: 84px; border-radius: 10px; object-fit: cover; flex-shrink:0; background: var(--bg-deep); }
+  .hn-mi-body{ flex:1; min-width:0; }
+  .hn-mi-name{ font-size: 14px; font-weight: 700; line-height: 1.4; }
+  .hn-mi-price{ font-size: 14px; font-weight: 900; color: var(--gold); margin-top: 4px; }
+  .hn-mi-add{ width: 34px; height: 34px; border-radius: 50%; background: var(--paper); color:#fff8ef; display:flex; align-items:center; justify-content:center; font-size: 20px; font-weight: 700; flex-shrink:0; }
+  .hn-mi-incart{ font-size: 11px; color: var(--red-bright); font-weight: 700; margin-top: 3px; }
+  .hn-cart-bar{
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: rgba(255,255,255,0.96);
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.15);
+  }
+  .hn-cart-bar button{
+    display:flex; justify-content:space-between; align-items:center; width:100%; max-width: 448px; margin: 0 auto;
+    padding: 14px 18px; border-radius: 12px; border: none; background: var(--paper); color:#fff8ef;
+    font-family: inherit; font-size: 15px; font-weight: 700; cursor:pointer;
+  }
+  .hn-cart-bar button:disabled{ opacity: 0.4; cursor: default; }
+
+  /* pre-order: option sheet */
+  .hn-sheet-bg{ position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 30; display:flex; align-items:flex-end; justify-content:center; }
+  .hn-sheet{
+    width:100%; max-width: 480px; max-height: 88vh; overflow-y:auto; background: var(--panel);
+    border-radius: 18px 18px 0 0; padding: 0 0 calc(16px + env(safe-area-inset-bottom)); color: var(--paper);
+  }
+  .hn-sheet-img{ width:100%; height: 200px; object-fit: cover; display:block; border-radius: 18px 18px 0 0; background: var(--bg-deep); }
+  .hn-sheet-body{ padding: 14px 18px 0; }
+  .hn-sheet-name{ font-size: 17px; font-weight: 900; line-height:1.4; }
+  .hn-sheet-price{ font-size: 16px; font-weight: 900; color: var(--gold); margin-top: 4px; }
+  .hn-sheet-desc{ font-size: 12px; color: var(--muted); margin: 14px 0 8px; line-height:1.5; }
+  .hn-opt{ display:flex; align-items:center; gap:10px; padding: 11px 4px; border-bottom: 1px solid var(--line); font-size: 14px; cursor:pointer; }
+  .hn-opt input{ width: 20px; height: 20px; accent-color: #2a1c12; flex-shrink:0; }
+  .hn-opt span{ flex:1; }
+  .hn-opt small{ color: var(--gold); font-weight: 700; }
+  .hn-sheet-qty{ display:flex; align-items:center; justify-content:center; gap: 22px; margin: 18px 0 14px; }
+  .hn-sheet-qty .hn-count{ min-width: 40px; }
+  .hn-sheet-actions{ display:flex; gap:10px; padding: 0 18px; }
+  .hn-sheet-actions button{ flex:1; padding: 14px; border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 700; cursor:pointer; }
+  .hn-btn-ghost{ background: var(--bg-deep); color: var(--paper); border: 1px solid var(--line); }
+  .hn-btn-solid{ background: var(--paper); color:#fff8ef; border: none; }
+  .hn-btn-solid:disabled{ opacity: 0.4; cursor: default; }
+
+  /* pre-order: cart */
+  .hn-cart-line{ display:flex; gap:10px; align-items:flex-start; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .hn-cart-line:last-child{ border-bottom:none; }
+  .hn-cart-line-main{ flex:1; min-width:0; font-size: 14px; font-weight: 700; line-height:1.4; }
+  .hn-cart-line-price{ font-size: 13px; color: var(--gold); font-weight: 900; margin-top: 2px; }
+  .hn-cart-qty{ display:flex; align-items:center; gap: 8px; flex-shrink:0; }
+  .hn-cart-qty button{ width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-deep); color: var(--paper); font-size: 16px; font-weight:700; cursor:pointer; }
+  .hn-cart-qty b{ min-width: 18px; text-align:center; }
+  .hn-cart-remove{ display:block; margin-top: 6px; background:none; border:none; padding:0; color: var(--red-bright); font-size: 11px; text-decoration: underline; cursor:pointer; font-family: inherit; }
+  .hn-cart-total{ display:flex; justify-content:space-between; font-size: 16px; font-weight: 900; padding-top: 12px; margin-top: 4px; border-top: 2px solid var(--line); }
+
+  /* pre-order: staff side */
+  .hn-order-toggle{
+    display:inline-flex; align-items:center; gap:6px; margin-top: 8px; padding: 5px 10px; border-radius: 20px;
+    border: 1px solid var(--gold-soft); background: rgba(232,114,31,0.10); color: var(--gold);
+    font-family: inherit; font-size: 12px; font-weight: 700; cursor:pointer;
+  }
+  .hn-order-list{ margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg-deep); border: 1px solid var(--line); }
+
   @media (max-width: 400px){
     .hn-row{ flex-wrap: wrap; }
     .hn-row-actions{ width: 100%; justify-content:flex-end; }
@@ -279,7 +376,7 @@
   const INSTAGRAM_URL = 'https://www.instagram.com/marugetta/';
   const DONE_REDIRECT_DELAY_MS = 5000;
   const TICKET_STALE_MS = 3 * 60 * 60 * 1000; // forget the customer's local ticket this long after check-in
-  const APP_VERSION = 'V202610201430'; // bumped on every deploy — checked against version.json to auto-reload stale pages
+  const APP_VERSION = 'V202611211500'; // bumped on every deploy — checked against version.json to auto-reload stale pages
   const DAY_MS = 24*60*60*1000;
   const HISTORY_WINDOW_MS = 7 * DAY_MS; // staff history is kept and shown for a rolling 7 days
 
@@ -317,7 +414,13 @@
       justNow: 'たった今', waitMin: (n)=> n+'分待ち',
       gamesLabel: 'お待ちの間に遊べます',
       game1: 'マルゲッタちゃんSHOOT！', game2: 'マルゲッタちゃんMBTI性格診断',
-      mangaLabel: '必読！ふくやの明太子', mangaBack: '戻る'
+      mangaLabel: '必読！ふくやの明太子', mangaBack: '戻る',
+      orderPrompt: 'お待ちの間に、ご注文をお決めください。', menuLunch: 'ランチメニュー', menuDinner: 'ディナーメニュー',
+      addToCart: 'カートに入れる', viewCart: (n)=> 'カートを見る（'+n+'点）', cartTitle: 'カート', cartEmpty: 'カートは空です',
+      total: '合計', placeOrder: 'この内容で注文する', backToMenu: 'メニューに戻る', backToTicket: '受付票に戻る',
+      orderDone: 'ご注文承りました。店内でのご注文は大丈夫ですので、もう少しだけお待ちください。',
+      yourOrder: 'ご注文内容', orderChangeNote: '注文の変更はスタッフまでお伝えください。',
+      optionsLabel: 'オプション', qtyLabel: '数量', removeItem: '削除', chooseOne: 'お選びください'
     },
     en: {
       subCustomer: 'Karatomachi — Waitlist Check-in', subTicket: 'Your Ticket',
@@ -345,7 +448,13 @@
       justNow: 'Just now', waitMin: (n)=> 'Waiting '+n+' min',
       gamesLabel: 'Play while you wait',
       game1: 'Mentaiko Defense', game2: 'Marghetta Personality Quiz',
-      mangaLabel: 'Must-Read! Fukuya Mentaiko (JP)', mangaBack: 'Back'
+      mangaLabel: 'Must-Read! Fukuya Mentaiko (JP)', mangaBack: 'Back',
+      orderPrompt: 'While you wait, feel free to choose your order.', menuLunch: 'Lunch Menu', menuDinner: 'Dinner Menu',
+      addToCart: 'Add to cart', viewCart: (n)=> 'View cart ('+n+')', cartTitle: 'Your Cart', cartEmpty: 'Your cart is empty',
+      total: 'Total', placeOrder: 'Place this order', backToMenu: 'Back to menu', backToTicket: 'Back to my ticket',
+      orderDone: "We've received your order. No need to order again inside — please wait just a little longer.",
+      yourOrder: 'Your Order', orderChangeNote: 'To change your order, please let our staff know.',
+      optionsLabel: 'Options', qtyLabel: 'Qty', removeItem: 'Remove', chooseOne: 'Please choose one'
     },
     ko: {
       subCustomer: '가라토마치점 대기 접수', subTicket: '접수증',
@@ -372,7 +481,13 @@
       justNow: '방금 전', waitMin: (n)=> n+'분 대기',
       gamesLabel: '대기 중에 즐겨보세요',
       game1: '멘타이코 디펜스', game2: '마루겟타 성격 진단',
-      mangaLabel: '필독! 후쿠야 멘타이코 (일본어)', mangaBack: '뒤로'
+      mangaLabel: '필독! 후쿠야 멘타이코 (일본어)', mangaBack: '뒤로',
+      orderPrompt: '기다리시는 동안 주문을 정해 주세요.', menuLunch: '런치 메뉴', menuDinner: '디너 메뉴',
+      addToCart: '장바구니에 담기', viewCart: (n)=> '장바구니 보기 ('+n+')', cartTitle: '장바구니', cartEmpty: '장바구니가 비어 있습니다',
+      total: '합계', placeOrder: '이 내용으로 주문하기', backToMenu: '메뉴로 돌아가기', backToTicket: '접수증으로 돌아가기',
+      orderDone: '주문을 접수했습니다. 매장 안에서 다시 주문하실 필요는 없으니 조금만 더 기다려 주세요.',
+      yourOrder: '주문 내용', orderChangeNote: '주문 변경은 직원에게 말씀해 주세요.',
+      optionsLabel: '옵션', qtyLabel: '수량', removeItem: '삭제', chooseOne: '하나를 선택해 주세요'
     },
     'zh-tw': {
       subCustomer: '唐人町店　候位登記', subTicket: '候位券',
@@ -399,7 +514,13 @@
       justNow: '剛剛', waitMin: (n)=> '已等候 '+n+' 分鐘',
       gamesLabel: '候位期間可以玩玩看',
       game1: '明太子防衛戰', game2: 'Marghetta 性格測驗',
-      mangaLabel: '必讀！福屋明太子（日文）', mangaBack: '返回'
+      mangaLabel: '必讀！福屋明太子（日文）', mangaBack: '返回',
+      orderPrompt: '候位期間，歡迎先決定您的餐點。', menuLunch: '午餐菜單', menuDinner: '晚餐菜單',
+      addToCart: '加入購物車', viewCart: (n)=> '查看購物車（'+n+'）', cartTitle: '購物車', cartEmpty: '購物車是空的',
+      total: '合計', placeOrder: '以此內容點餐', backToMenu: '返回菜單', backToTicket: '返回候位券',
+      orderDone: '已收到您的點餐。入店後無需再次點餐，請再稍候片刻。',
+      yourOrder: '點餐內容', orderChangeNote: '如需更改點餐，請告知店員。',
+      optionsLabel: '選項', qtyLabel: '數量', removeItem: '刪除', chooseOne: '請選擇一項'
     },
     'zh-cn': {
       subCustomer: '唐人町店　候位登记', subTicket: '候位券',
@@ -426,7 +547,13 @@
       justNow: '刚刚', waitMin: (n)=> '已等候 '+n+' 分钟',
       gamesLabel: '候位期间可以玩玩看',
       game1: '明太子防卫战', game2: 'Marghetta 性格测验',
-      mangaLabel: '必读！福屋明太子（日文）', mangaBack: '返回'
+      mangaLabel: '必读！福屋明太子（日文）', mangaBack: '返回',
+      orderPrompt: '候位期间，欢迎先决定您的餐点。', menuLunch: '午餐菜单', menuDinner: '晚餐菜单',
+      addToCart: '加入购物车', viewCart: (n)=> '查看购物车（'+n+'）', cartTitle: '购物车', cartEmpty: '购物车是空的',
+      total: '合计', placeOrder: '以此内容点餐', backToMenu: '返回菜单', backToTicket: '返回候位券',
+      orderDone: '已收到您的点餐。入店后无需再次点餐，请再稍候片刻。',
+      yourOrder: '点餐内容', orderChangeNote: '如需更改点餐，请告知店员。',
+      optionsLabel: '选项', qtyLabel: '数量', removeItem: '删除', chooseOne: '请选择一项'
     }
   };
   const SEAT_KEYS = ['table','counter','either'];
@@ -442,6 +569,12 @@
   let busy = false;
   let lastKnownTicketStatus = null; // used to detect the waiting→called transition for the alert sound/vibration
   let mangaOpen = false; // customer tapped the "必読！ふくやの明太子" card on the ticket screen
+  let orderView = null; // null | 'menu' | 'cart' | 'done' — customer's pre-order flow while waiting
+  let menuData = null; // menu/menu.json, loaded on first open
+  let menuCat = 0; // selected top-level category tab
+  let sheet = null; // { item, opts:Set<index>, qty } — option sheet being edited
+  let cart = { ticketId: null, menu: null, items: [] };
+  let openOrderIds = new Set(); // staff: rows whose pre-order list is expanded
 
   function playCallAlert(){
     // Two-tone chime via Web Audio API — no external file needed, works offline.
@@ -478,6 +611,263 @@
         '<a class="hn-game-card" href="games/mbti.html" target="_blank" rel="noopener"><span class="hn-game-emoji">🧠</span><span>'+tr.game2+'</span></a>'+
         '<button type="button" class="hn-game-card" id="hnMangaOpen"><span class="hn-game-emoji">📖</span><span>'+tr.mangaLabel+'</span></button>'+
       '</div></div>';
+  }
+
+  const MENU_LANG_KEY = { 'ja':'ja', 'en':'en', 'ko':'ko', 'zh-tw':'zh', 'zh-cn':'zh' };
+  const CART_KEY = 'mg-cart';
+  const LUNCH_UNTIL_HOUR = 16; // lunch 11:00–16:00; from 16:00 the dinner menu is shown (seating starts 17:00)
+
+  function mname(n){ return n ? (n[MENU_LANG_KEY[lang]] || n.ja || '') : ''; }
+  function jaName(n){ return (n && n.ja) || ''; }
+  function yen(n){ return '¥' + Number(n || 0).toLocaleString('ja-JP'); }
+  function lineUnit(l){ return l.price + (l.opts || []).reduce((a,o)=>a + o.price, 0); }
+  function cartCount(){ return cart.items.reduce((a,l)=>a + l.qty, 0); }
+  function cartTotal(){ return cart.items.reduce((a,l)=>a + lineUnit(l) * l.qty, 0); }
+  function optKey(l){ return l.code + '|' + (l.opts || []).map(o=>jaName(o.name)).join(','); }
+
+  function loadCart(){
+    try{
+      const c = JSON.parse(localStorage.getItem(CART_KEY) || 'null');
+      cart = (c && c.ticketId === myTicketId) ? c : { ticketId: myTicketId, menu: null, items: [] };
+    }catch(e){ cart = { ticketId: myTicketId, menu: null, items: [] }; }
+  }
+  function saveCart(){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }catch(e){} }
+  function clearCart(){
+    cart = { ticketId: null, menu: null, items: [] };
+    try{ localStorage.removeItem(CART_KEY); }catch(e){}
+  }
+
+  async function ensureMenu(){
+    if(menuData) return true;
+    try{
+      const r = await fetch('menu/menu.json?v=' + APP_VERSION);
+      if(!r.ok) return false;
+      menuData = await r.json();
+      return true;
+    }catch(e){ return false; }
+  }
+
+  function rerenderKeepScroll(){
+    const y = window.scrollY;
+    render();
+    window.scrollTo(0, y);
+  }
+
+  function orderLinesHTML(order, nameOf, totalLabel){
+    return (order.items || []).map(l=>
+      '<div class="hn-ol-row"><div>'+escapeHTML(nameOf(l.name))+
+        ((l.opts && l.opts.length) ? '<span class="hn-ol-opts">'+escapeHTML(l.opts.map(o=>nameOf(o.name)).join('・'))+'</span>' : '')+
+      '</div><div style="white-space:nowrap; font-weight:700;">×'+l.qty+'</div></div>'
+    ).join('') +
+    '<div class="hn-ol-total"><span>'+totalLabel+'</span><span>'+yen(order.total)+'</span></div>';
+  }
+
+  function orderSummaryHTML(order){
+    const tr = T[lang];
+    return '<div class="hn-order-summary"><h3>'+tr.yourOrder+'</h3>'+
+      orderLinesHTML(order, mname, tr.total)+
+      '<div class="hn-ol-note">'+tr.orderChangeNote+'</div></div>';
+  }
+
+  async function openOrder(btn){
+    if(!(await ensureMenu())){ btn.textContent = T[lang].errNetwork; return; }
+    loadCart();
+    if(!cart.menu) cart.menu = new Date().getHours() < LUNCH_UNTIL_HOUR ? 'lunch' : 'dinner';
+    menuCat = 0; sheet = null; orderView = 'menu';
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function sheetHTML(){
+    const tr = T[lang];
+    const it = sheet.item;
+    const tg = it.tg && menuData.toppings[it.tg];
+    return '<div class="hn-sheet-bg" id="hnSheetBg"><div class="hn-sheet">'+
+      (it.img ? '<img class="hn-sheet-img" src="'+it.img+'" alt="">' : '')+
+      '<div class="hn-sheet-body">'+
+        '<div class="hn-sheet-name">'+escapeHTML(mname(it.name))+'</div>'+
+        '<div class="hn-sheet-price">'+yen(it.price)+'</div>'+
+        (tg ?
+          '<div class="hn-sheet-desc">'+escapeHTML(mname(tg.desc) || (tg.single ? tr.chooseOne : tr.optionsLabel))+'</div>'+
+          tg.items.map((o,oi)=>
+            '<label class="hn-opt"><input type="'+(tg.single ? 'radio' : 'checkbox')+'" name="hnOpt" data-opt="'+oi+'" '+(sheet.opts.has(oi) ? 'checked' : '')+'>'+
+            '<span>'+escapeHTML(mname(o.name))+'</span>'+(o.price ? '<small>+'+yen(o.price)+'</small>' : '')+'</label>'
+          ).join('') : '')+
+        '<div class="hn-sheet-qty"><button type="button" class="hn-stepbtn" data-sq="-1">−</button>'+
+          '<div class="hn-count" id="hnSheetQty">'+sheet.qty+'</div>'+
+          '<button type="button" class="hn-stepbtn" data-sq="1">＋</button></div>'+
+      '</div>'+
+      '<div class="hn-sheet-actions">'+
+        '<button type="button" class="hn-btn-ghost" id="hnSheetClose">'+tr.mangaBack+'</button>'+
+        '<button type="button" class="hn-btn-solid" id="hnSheetAdd"></button>'+
+      '</div>'+
+    '</div></div>';
+  }
+
+  function updateSheetFooter(){
+    const tr = T[lang];
+    const it = sheet.item;
+    const tg = it.tg && menuData.toppings[it.tg];
+    const unit = it.price + (tg ? [...sheet.opts].reduce((a,i)=>a + tg.items[i].price, 0) : 0);
+    const btn = document.getElementById('hnSheetAdd');
+    btn.disabled = !!(tg && tg.single && sheet.opts.size !== 1);
+    btn.textContent = tr.addToCart + '　' + yen(unit * sheet.qty);
+    document.getElementById('hnSheetQty').textContent = sheet.qty;
+  }
+
+  function bindSheet(){
+    const it = sheet.item;
+    const tg = it.tg && menuData.toppings[it.tg];
+    const close = ()=>{ sheet = null; rerenderKeepScroll(); };
+    document.getElementById('hnSheetBg').onclick = (ev)=>{ if(ev.target.id === 'hnSheetBg') close(); };
+    document.getElementById('hnSheetClose').onclick = close;
+    root.querySelectorAll('[data-opt]').forEach(inp=>{
+      inp.onchange = ()=>{
+        const oi = Number(inp.getAttribute('data-opt'));
+        if(tg.single) sheet.opts = new Set([oi]);
+        else if(inp.checked) sheet.opts.add(oi); else sheet.opts.delete(oi);
+        updateSheetFooter();
+      };
+    });
+    root.querySelectorAll('[data-sq]').forEach(b=>{
+      b.onclick = ()=>{ sheet.qty = Math.min(20, Math.max(1, sheet.qty + Number(b.getAttribute('data-sq')))); updateSheetFooter(); };
+    });
+    document.getElementById('hnSheetAdd').onclick = ()=>{
+      const opts = tg ? [...sheet.opts].sort((a,b)=>a-b).map(i=>({ name: tg.items[i].name, price: tg.items[i].price })) : [];
+      const line = { code: it.code, name: it.name, price: it.price, opts: opts, qty: sheet.qty };
+      const same = cart.items.find(l => optKey(l) === optKey(line));
+      if(same) same.qty = Math.min(99, same.qty + line.qty); else cart.items.push(line);
+      saveCart();
+      close();
+    };
+    updateSheetFooter();
+  }
+
+  function renderOrderView(myTicket){
+    const tr = T[lang];
+    const head = '<div class="hn-header">'+logoHTML()+'</div>';
+
+    if(orderView === 'done'){
+      root.innerHTML =
+        '<div class="hn-shell">'+head+
+        '<div class="hn-order-done-msg">'+tr.orderDone+'</div>'+
+        (myTicket.preOrder ? '<div class="hn-card" style="padding:4px 16px 16px;">'+orderSummaryHTML(myTicket.preOrder)+'</div>' : '')+
+        '<button type="button" class="hn-manga-nav bottom" data-ov="ticket">← '+tr.backToTicket+'</button>'+
+        '</div>';
+    } else if(orderView === 'cart'){
+      const n = cart.items.length;
+      root.innerHTML =
+        '<div class="hn-shell hn-menu-shell">'+head+
+        '<button type="button" class="hn-manga-nav" data-ov="menu">← '+tr.backToMenu+'</button>'+
+        '<div class="hn-card">'+
+          '<div class="hn-menu-title" style="margin-top:0;">'+tr.cartTitle+'</div>'+
+          (n ? cart.items.map((l,i)=>
+            '<div class="hn-cart-line"><div class="hn-cart-line-main">'+escapeHTML(mname(l.name))+
+              ((l.opts && l.opts.length) ? '<span class="hn-ol-opts">'+escapeHTML(l.opts.map(o=>mname(o.name)).join('・'))+'</span>' : '')+
+              '<div class="hn-cart-line-price">'+yen(lineUnit(l) * l.qty)+'</div>'+
+              '<button type="button" class="hn-cart-remove" data-cl-rm="'+i+'">'+tr.removeItem+'</button></div>'+
+              '<div class="hn-cart-qty"><button type="button" data-cl-q="'+i+'" data-d="-1">−</button><b>'+l.qty+'</b>'+
+              '<button type="button" data-cl-q="'+i+'" data-d="1">＋</button></div></div>'
+          ).join('') +
+          '<div class="hn-cart-total"><span>'+tr.total+'</span><span>'+yen(cartTotal())+'</span></div>'
+          : '<div class="hn-empty">'+tr.cartEmpty+'</div>')+
+          '<div class="hn-err" id="hnOrderErr"></div>'+
+        '</div></div>'+
+        '<div class="hn-cart-bar"><button type="button" id="hnPlaceOrder" '+(n ? '' : 'disabled')+'>'+
+          '<span>'+tr.placeOrder+'</span><span>'+yen(cartTotal())+'</span></button></div>';
+    } else {
+      const cats = menuData[cart.menu] || [];
+      if(menuCat >= cats.length) menuCat = 0;
+      const cat = cats[menuCat];
+      const inCart = {};
+      cart.items.forEach(l=>{ inCart[l.code] = (inCart[l.code] || 0) + l.qty; });
+      const n = cartCount();
+      root.innerHTML =
+        '<div class="hn-shell hn-menu-shell">'+head+
+        '<button type="button" class="hn-manga-nav" data-ov="ticket">← '+tr.backToTicket+'</button>'+
+        '<div class="hn-menu-title">'+(cart.menu === 'lunch' ? tr.menuLunch : tr.menuDinner)+'</div>'+
+        '<div class="hn-cat-tabs">'+cats.map((c,i)=>
+          '<button type="button" class="hn-cat-tab '+(i === menuCat ? 'active' : '')+'" data-cat="'+i+'">'+escapeHTML(mname(c.name).replace(/\n/g,''))+'</button>'
+        ).join('')+'</div>'+
+        (cat ? cat.subs.map((s,si)=>
+          (cat.subs.length > 1 ? '<div class="hn-sub-title">'+escapeHTML(mname(s.name).replace(/\n/g,''))+'</div>' : '')+
+          s.items.map((it,ii)=>
+            '<button type="button" class="hn-menu-item" data-item="'+si+':'+ii+'">'+
+              (it.img ? '<img src="'+it.img+'" alt="" loading="lazy">' : '<div class="hn-mi-noimg"></div>')+
+              '<div class="hn-mi-body"><div class="hn-mi-name">'+escapeHTML(mname(it.name))+'</div>'+
+                '<div class="hn-mi-price">'+yen(it.price)+'</div>'+
+                (inCart[it.code] ? '<div class="hn-mi-incart">✓ ×'+inCart[it.code]+'</div>' : '')+
+              '</div><div class="hn-mi-add">＋</div></button>'
+          ).join('')
+        ).join('') : '')+
+        '</div>'+
+        '<div class="hn-cart-bar"><button type="button" data-ov="cart" '+(n ? '' : 'disabled')+'>'+
+          '<span>'+tr.viewCart(n)+'</span><span>'+yen(cartTotal())+'</span></button></div>'+
+        (sheet ? sheetHTML() : '');
+
+      root.querySelectorAll('[data-cat]').forEach(b=>{
+        b.onclick = ()=>{ menuCat = Number(b.getAttribute('data-cat')); render(); window.scrollTo(0, 0); };
+      });
+      root.querySelectorAll('[data-item]').forEach(b=>{
+        b.onclick = ()=>{
+          const [si, ii] = b.getAttribute('data-item').split(':').map(Number);
+          sheet = { item: cat.subs[si].items[ii], opts: new Set(), qty: 1 };
+          rerenderKeepScroll();
+        };
+      });
+      if(sheet) bindSheet();
+    }
+
+    root.querySelectorAll('[data-ov]').forEach(b=>{
+      b.onclick = ()=>{
+        const to = b.getAttribute('data-ov');
+        orderView = to === 'ticket' ? null : to;
+        sheet = null;
+        render();
+        window.scrollTo(0, 0);
+      };
+    });
+    root.querySelectorAll('[data-cl-q]').forEach(b=>{
+      b.onclick = ()=>{
+        const l = cart.items[Number(b.getAttribute('data-cl-q'))];
+        l.qty = Math.min(99, Math.max(1, l.qty + Number(b.getAttribute('data-d'))));
+        saveCart(); rerenderKeepScroll();
+      };
+    });
+    root.querySelectorAll('[data-cl-rm]').forEach(b=>{
+      b.onclick = ()=>{ cart.items.splice(Number(b.getAttribute('data-cl-rm')), 1); saveCart(); rerenderKeepScroll(); };
+    });
+    const placeBtn = document.getElementById('hnPlaceOrder');
+    if(placeBtn) placeBtn.onclick = async ()=>{
+      placeBtn.disabled = true;
+      try{
+        await loadState();
+        const entry = state.entries.find(e=>e.id === myTicketId);
+        if(!entry) throw new Error('ticket not found');
+        entry.preOrder = {
+          at: Date.now(), menu: cart.menu, total: cartTotal(),
+          items: cart.items.map(l=>({ code: l.code, name: l.name, price: l.price, opts: l.opts || [], qty: l.qty }))
+        };
+        await saveState();
+        clearCart();
+        orderView = 'done';
+        render();
+        window.scrollTo(0, 0);
+      }catch(e){
+        console.error('[マルゲッタ] failed to save pre-order:', e);
+        document.getElementById('hnOrderErr').textContent = tr.errNetwork;
+        placeBtn.disabled = false;
+      }
+    };
+  }
+
+  function staffOrderHTML(e){
+    if(!e.preOrder) return '';
+    const n = (e.preOrder.items || []).reduce((a,l)=>a + l.qty, 0);
+    const open = openOrderIds.has(e.id);
+    return '<button type="button" class="hn-order-toggle" data-order-toggle="'+e.id+'">🍝 事前注文 '+n+'点 '+
+        yen(e.preOrder.total)+'（'+clockTimeJa(e.preOrder.at)+'）'+(open ? ' ▲' : ' ▼')+'</button>'+
+      (open ? '<div class="hn-order-list">'+orderLinesHTML(e.preOrder, jaName, '合計')+'</div>' : '');
   }
 
   async function withRetry(fn, attempts){
@@ -618,9 +1008,16 @@
       lastKnownTicketStatus = myTicket.status;
 
       if(myTicket.status !== 'waiting'){
-        // Don't let the manga stay open and hide an important status change
-        // (called / done / ended) that just arrived from the poll.
+        // Don't let the manga / menu stay open and hide an important status
+        // change (called / done / ended) that just arrived from the poll.
         mangaOpen = false;
+        orderView = null;
+        sheet = null;
+      }
+
+      if(orderView && menuData){
+        renderOrderView(myTicket);
+        return;
       }
 
       if(mangaOpen){
@@ -656,6 +1053,9 @@
              myTicket.status==='done' ? tr.statusDone :
              tr.statusEnded) +
           '</div>'+
+          (myTicket.preOrder && (myTicket.status==='waiting' || myTicket.status==='called') ? orderSummaryHTML(myTicket.preOrder) : '')+
+          (myTicket.status==='waiting' && !myTicket.preOrder ?
+            '<button type="button" class="hn-order-prompt" id="hnOrderOpen">🍝 '+tr.orderPrompt+'</button>' : '')+
           (myTicket.status==='waiting' ? gamesHTML() : '')+
           (myTicket.status==='waiting' ?
             '<button class="hn-back" id="hnCancelTicket" style="color:var(--red-bright);">'+tr.cancelTicket+'</button>' : '')+
@@ -663,7 +1063,7 @@
             '<button class="hn-back" id="hnNewEntry">'+tr.newEntry+'</button>' : '')+
         '</div></div>';
       if(document.getElementById('hnNewEntry')){
-        document.getElementById('hnNewEntry').onclick = async ()=>{ myTicketId=null; lastKnownTicketStatus=null; await clearMyTicket(); render(); };
+        document.getElementById('hnNewEntry').onclick = async ()=>{ myTicketId=null; lastKnownTicketStatus=null; clearCart(); await clearMyTicket(); render(); };
       }
       if(document.getElementById('hnCancelTicket')){
         document.getElementById('hnCancelTicket').onclick = async ()=>{
@@ -671,8 +1071,13 @@
           await loadState();
           const entry = state.entries.find(e=>e.id===myTicketId);
           if(entry){ entry.status = 'cancelled'; entry.finishedAt = Date.now(); await saveState(); }
+          clearCart();
           render();
         };
+      }
+      if(document.getElementById('hnOrderOpen')){
+        const orderBtn = document.getElementById('hnOrderOpen');
+        orderBtn.onclick = ()=> openOrder(orderBtn);
       }
       if(document.getElementById('hnMangaOpen')){
         document.getElementById('hnMangaOpen').onclick = ()=>{ mangaOpen = true; render(); };
@@ -880,6 +1285,13 @@
         render();
       };
     });
+    root.querySelectorAll('[data-order-toggle]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = btn.getAttribute('data-order-toggle');
+        if(openOrderIds.has(id)) openOrderIds.delete(id); else openOrderIds.add(id);
+        rerenderKeepScroll();
+      };
+    });
     document.getElementById('hnReset').onclick = async ()=>{
       if(!confirm('待機中のお客様をクリアし、受付番号を1からリセットします。過去7日間の対応履歴は保持されます。よろしいですか？')) return;
       const now = Date.now();
@@ -920,6 +1332,7 @@
         '<div class="hn-row-name">'+escapeHTML(e.name)+' 様　'+e.count+'名</div>'+
         '<div class="hn-row-sub"><span>'+seatLabel(e.seat)+'</span><span>'+clockTimeJa(e.createdAt)+'受付</span><span>'+timeAgoJa(e.createdAt)+'</span>'+
           '<span class="hn-badge '+(e.status==='called'?'called':'')+'">'+(e.status==='called'?'呼出済':'待機中')+'</span></div>'+
+        staffOrderHTML(e)+
       '</div>'+
       '<div class="hn-row-actions">'+
         (e.status==='waiting' ? '<button class="hn-abtn call" data-act="call" data-id="'+e.id+'">呼び出す</button>' : '')+
@@ -938,6 +1351,7 @@
         '<div class="hn-row-sub"><span>'+seatLabel(e.seat)+'</span><span>'+clockTimeJa(e.createdAt)+'受付</span>'+
           (waited!==null ? '<span>待ち時間 '+waited+'分</span>' : '')+
           '<span class="hn-badge '+(e.status==='done'?'done':'cancelled')+'">'+statusLabel+'</span></div>'+
+        staffOrderHTML(e)+
       '</div></div>';
   }
 
@@ -962,7 +1376,15 @@
     // Skip re-rendering it once it's already on screen, so background polling
     // doesn't wipe what someone typed — but only once it actually exists;
     // otherwise the very first render would never happen.
-    return view === 'customer' && !myTicketId && !!root.querySelector('#hnSubmit');
+    if(view !== 'customer') return false;
+    if(!myTicketId) return !!root.querySelector('#hnSubmit');
+    // Browsing the pre-order menu: hold re-renders (they'd reset scroll and
+    // close the option sheet) unless the ticket was just called or closed.
+    if(orderView){
+      const t = state.entries.find(e => e.id === myTicketId);
+      return !!t && t.status === 'waiting';
+    }
+    return false;
   }
 
   async function tick(){
